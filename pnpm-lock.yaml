@@ -60,15 +60,12 @@ importers:
         specifier: ^2.5.5
         version: 2.5.5
     devDependencies:
+      '@echo-ui/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@fumadocs/cli':
         specifier: ^0.0.4
         version: 0.0.4
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       '@types/mdx':
         specifier: ^2.0.13
         version: 2.0.13

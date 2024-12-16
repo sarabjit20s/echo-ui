@@ -1,6 +1,7 @@
 {
   "name": "www",
   "version": "0.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "build": "next build",
@@ -25,8 +26,7 @@
   },
   "devDependencies": {
     "@fumadocs/cli": "^0.0.4",
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
+    "@echo-ui/eslint-config": "workspace:*",
     "@types/mdx": "^2.0.13",
     "@types/node": "22.10.2",
     "@types/react": "^19.0.1",
