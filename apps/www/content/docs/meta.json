@@ -2,5 +2,5 @@
   "title": "EchoUI",
   "description": "A collection of pre-built, high-quality React Native components designed to accelerate your mobile app development.",
   "root": true,
-  "pages": ["---Guide---", "index", "---Components---", "..."]
+  "pages": ["---Guide---", "index", "---Components---", "...components"]
 }
