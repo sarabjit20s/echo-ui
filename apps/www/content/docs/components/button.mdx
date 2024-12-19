@@ -1,6 +1,6 @@
 ---
-title: Text
-description: Display text using well-defined typographic styles.
+title: Button
+description: Displays a button or a component that looks like a button.
 ---
 
 import Link from 'next/link';
@@ -15,12 +15,14 @@ import { readComponentFile } from '@/lib/readFile';
 <Step>
 Make sure you have installed the following dependencies:
 #### Internal Dependencies
+  - <Link href={'/docs/components/icon'}>Icon</Link>
   - <Link href={'/docs/utils/slot'}>Slot</Link>
+  - <Link href={'/docs/components/text'}>Text</Link>
 </Step>
 
 <Step>
-Copy and paste the following code into `components/ui/Text.tsx`.
-<DynamicCodeBlock lang="tsx" code={readComponentFile('Text')} />
+Copy and paste the following code into `components/ui/Button.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Button')} />
 </Step>
 
 <Step>
@@ -31,12 +33,14 @@ Update the import paths to match your project setup.
 
 ## Usage
 
-```tsx title="MyText.tsx"
-import { Text } from '@/components/ui/Text';
+```tsx title="MyButton.tsx"
+import { Button, ButtonText } from '@/components/ui/Button';
 
-export function MyText() {
+export function MyButton() {
   return (
-    <Text>This is the text component</Text>
+    <Button>
+      <ButtonText>Get Started</ButtonText>
+    </Button>
   );
 }
 ```

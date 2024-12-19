@@ -1,0 +1,65 @@
+---
+title: Popover
+description: Display a popover or a component that looks like a popover.
+---
+
+import Link from 'next/link';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readComponentFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/components/popup'}>Popup</Link>
+#### External Dependencies
+  - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/Popover.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Popover')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyPopover.tsx"
+import {
+  Popover,
+  PopoverArrow,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/Popover';
+import { Button, ButtonIcon } from '@/components/ui/Button';
+import { Text } from '@/components/ui/Text';
+
+export function MyDropdownMenu() {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button>
+          <ButtonText>Open Popover</ButtonText>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent maxWidth={260}>
+        <PopoverArrow />
+        <Text variant="bodySm">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae
+          cupiditate sed quia neque earum eligendi atque deserunt deleniti minus
+          laborum?
+        </Text>
+      </PopoverContent>
+    </Popover>
+  );
+}
+```

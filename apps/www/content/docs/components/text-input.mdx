@@ -1,6 +1,6 @@
 ---
-title: Text
-description: Display text using well-defined typographic styles.
+title: TextInput
+description: A text input that allows the user to enter text.
 ---
 
 import Link from 'next/link';
@@ -19,8 +19,8 @@ Make sure you have installed the following dependencies:
 </Step>
 
 <Step>
-Copy and paste the following code into `components/ui/Text.tsx`.
-<DynamicCodeBlock lang="tsx" code={readComponentFile('Text')} />
+Copy and paste the following code into `components/ui/TextInput.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('TextInput')} />
 </Step>
 
 <Step>
@@ -31,12 +31,12 @@ Update the import paths to match your project setup.
 
 ## Usage
 
-```tsx title="MyText.tsx"
-import { Text } from '@/components/ui/Text';
+```tsx title="MyTextInput.tsx"
+import { TextInput } from '@/components/ui/TextInput';
 
-export function MyText() {
+export function MyTextInput() {
   return (
-    <Text>This is the text component</Text>
+    <TextInput />
   );
 }
 ```

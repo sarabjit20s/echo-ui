@@ -1,0 +1,55 @@
+---
+title: Avatar
+description: Profile picture, user initials or fallback icon.
+---
+
+import Link from 'next/link';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readComponentFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/utils/slot'}>Slot</Link>
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/Avatar.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Avatar')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyAvatar.tsx"
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  AvatarProps,
+} from '@/components/ui/Avatar';
+import { Text } from '@/components/ui/Text';
+
+export function MyAvatar() {
+  return (
+    <Avatar>
+      <AvatarImage src="https://avatar.iran.liara.run/public?username=John+Doe" />
+      <AvatarFallback>
+        <Text color="primary">
+          JD
+        </Text>
+      </AvatarFallback>
+    </Avatar>
+  );
+}
+```

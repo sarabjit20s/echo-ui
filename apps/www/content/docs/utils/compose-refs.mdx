@@ -1,0 +1,47 @@
+---
+title: Compose Refs
+description: A utility to compose multiple refs together
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readUtilFile } from '@/lib/readFile';
+
+<Callout>
+This utility has been copied from the Radix UI library. View the original source [here](https://github.com/radix-ui/primitives/blob/main/packages/react/compose-refs/src/composeRefs.tsx)
+</Callout>
+
+## Installation
+
+<Steps>
+<Step>
+Copy and paste the following code into `utils/composeRefs.ts`.
+<DynamicCodeBlock lang="ts" code={readUtilFile('composeRefs')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+</Steps>
+
+## Usage
+
+```tsx title="MyComponent.tsx"
+import React from 'react';
+import { View } from 'react-native';
+
+import { composeRefs } from '@/utils/compose-refs';
+
+export function MyComponent() {
+    const ref1 = React.useRef<View>(null);
+    const ref2 = React.useRef<View>(null);
+    const ref3 = React.useRef<View>(null);
+
+    const composedRef = composeRefs(ref1, ref2, ref3);
+
+    return (
+        <View ref={composedRef}>
+            {/* ... */}
+        </View>
+    )
+}
+```

@@ -1,0 +1,75 @@
+---
+title: usePositioning
+description: A hook that positions a target element relative to an anchor element.
+---
+
+import Link from 'next/link';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { readHookFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/hooks/useInsets'}>useInsets</Link>
+  - <Link href={'/docs/hooks/useScreenDimensions'}>useScreenDimensions</Link>
+</Step>
+<Step>
+Copy and paste the following code into `hooks/usePositioning.ts`.
+<DynamicCodeBlock lang="ts" code={readHookFile('usePositioning')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+</Steps>
+
+## Usage
+
+<Callout>Your `target` element must be wrapped in a <Link href={'/docs/utils/portal'}>`Portal`</Link> component.</Callout>
+
+```tsx title="MyComponent.tsx"
+import React from 'react';
+import { View } from 'react-native';
+
+import { Portal } from '@/utils/portal';
+import { usePositioning } from '@/hooks/usePositioning';
+
+export function MyComponent() {
+  const anchorRef = React.useRef<View>(null);
+  const targetRef = React.useRef<View>(null);
+
+  const { x, y } = usePositioning({
+    anchorRef,
+    targetRef,
+    placement: 'bottom',
+  });
+
+  return (
+    <View>
+      <View
+        ref={anchorRef}
+        collapsable={false}
+        style={{ width: 120, height: 40, backgroundColor: 'red' }}
+      />
+      {/* Make sure to wrap the target element in a portal */}
+      <Portal>
+        <View
+          ref={targetRef}
+          style={{
+            width: 100,
+            height: 100,
+            backgroundColor: 'blue',
+            position: 'absolute',
+            left: x,
+            top: y,
+          }}
+        />
+      </Portal>
+    </View>
+  );
+}
+```

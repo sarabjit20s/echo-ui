@@ -1,0 +1,62 @@
+---
+title: Checkbox
+description: A control that allows the user to toggle between checked and not checked.
+---
+
+import Link from 'next/link';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readComponentFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/components/icon'}>Icon</Link>
+  - <Link href={'/docs/utils/slot'}>Slot</Link>
+  - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/Checkbox.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Checkbox')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyCheckbox.tsx"
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
+
+import { Checkbox, CheckboxIndicator } from '@/components/ui/Checkbox';
+import { Text } from '@/components/ui/Text';
+
+export function MyCheckbox() {
+  const { styles } = useStyles(stylesheet);
+
+  return (
+    <Checkbox style={styles.checkbox}>
+      <CheckboxIndicator />
+      <Text variant="labelMd" highContrast>
+        I agree to the terms and conditions.
+      </Text>
+    </Checkbox>
+  );
+}
+
+const stylesheet = createStyleSheet(theme => ({
+  checkbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.space[8],
+  },
+}))
+```

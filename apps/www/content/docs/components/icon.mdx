@@ -1,0 +1,44 @@
+---
+title: Icon
+description: Display an icon.
+---
+
+import Link from 'next/link';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readComponentFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### External Dependencies
+  - [React Native Vector Icons](https://github.com/oblador/react-native-vector-icons)
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/Icon.tsx`.
+<Callout>If you're using Expo, make sure to import `Ionicons` from the `@expo/vector-icons` package.</Callout>
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Icon')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyIcon.tsx"
+import { Icon } from '@/components/ui/Icon';
+
+export function MyIcon() {
+  return (
+    <Icon name="home" />
+  );
+}
+```

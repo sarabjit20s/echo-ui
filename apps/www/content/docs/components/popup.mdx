@@ -1,0 +1,93 @@
+---
+title: Popup
+description: A primitive component for creating popups like a popover or dropdown-menu.
+---
+
+import Link from 'next/link';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readComponentFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/utils/portal'}>Portal</Link>
+  - <Link href={'/docs/utils/slot'}>Slot</Link>
+  - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
+  - <Link href={'/docs/hooks/useInsets'}>useInsets</Link>
+  - <Link href={'/docs/hooks/usePositioning'}>usePositioning</Link>
+  - <Link href={'/docs/hooks/useScreenDimensions'}>useScreenDimensions</Link>
+#### External Dependencies
+  - [React Native Svg](https://github.com/software-mansion/react-native-svg)
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/Popup.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Popup')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyPopup.tsx"
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
+
+import {
+  Popup,
+  PopupArrow,
+  PopupContent,
+  PopupOverlay,
+  PopupPortal,
+  PopupTrigger,
+} from '@/components/ui/Popup';
+import { Button, ButtonText } from '@/components/ui/Button';
+
+export function MyPopup() {
+  const { styles } = useStyles(stylesheet);
+
+  return (
+    <Popup>
+      <PopupTrigger asChild>
+        <Button>
+          <ButtonText>Open Popup</ButtonText>
+        </Button>
+      </PopupTrigger>
+      <PopupPortal>
+        <PopupOverlay style={styles.popupOverlay} />
+        <PopupContent
+          maxWidth={260}
+          placement={'bottom'}
+          avoidCollisions={true}
+          style={styles.popupContent}>
+          <PopupArrow />
+          <Text variant="bodySm">
+            Popup is a{' '}
+            <Text fontFamily="interBold" inherit>
+              primitive
+            </Text>{' '}
+            which can be used to build components like Popover, Dropdown, etc.
+          </Text>
+        </PopupContent>
+      </PopupPortal>
+    </Popup>
+  );
+}
+
+const stylesheet = createStyleSheet(theme => ({
+  popupOverlay: {
+    backgroundColor: theme.colors.overlay,
+  },
+  popupContent: {
+    padding: theme.space[16],
+  },
+}))
+```

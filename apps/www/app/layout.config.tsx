@@ -1,3 +1,5 @@
+import React from 'react';
+import { Logo } from '@/components/logo';
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 
 /**
@@ -9,12 +11,25 @@ import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
  */
 export const baseOptions: BaseLayoutProps = {
   nav: {
-    title: 'EchoUI',
+    title: (
+      <div className="flex flex-row gap-2 items-center">
+        <Logo size="sm" />
+        <span className="font-medium [.uwu_&]:hidden [header_&]:text-[15px]">
+          Echo UI
+        </span>
+      </div>
+    ),
+    transparentMode: 'top',
   },
   links: [
     {
       text: 'Documentation',
       url: '/docs',
+      active: 'nested-url',
+    },
+    {
+      text: 'Components',
+      url: '/docs/components/accordion',
       active: 'nested-url',
     },
   ],

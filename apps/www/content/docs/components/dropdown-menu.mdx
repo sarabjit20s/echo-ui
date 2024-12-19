@@ -1,0 +1,92 @@
+---
+title: Dropdown Menu
+description: Displays a menu to the user that allows them to perform actions.
+---
+
+import Link from 'next/link';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readComponentFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/components/checkbox'}>Checkbox</Link>
+  - <Link href={'/docs/components/icon'}>Icon</Link>
+  - <Link href={'/docs/components/popup'}>Popup</Link>
+  - <Link href={'/docs/components/radio-group'}>Radio Group</Link>
+  - <Link href={'/docs/components/separator'}>Separator</Link>
+  - <Link href={'/docs/utils/slot'}>Slot</Link>
+  - <Link href={'/docs/components/text'}>Text</Link>
+#### External Dependencies
+  - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/DropdownMenu.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('DropdownMenu')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyDropdownMenu.tsx"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuItemIcon,
+  DropdownMenuItemTitle,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
+import { Button, ButtonIcon } from '@/components/ui/Button';
+
+export function MyDropdownMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="soft" accessibilityLabel="Open menu" iconOnly>
+          <ButtonIcon name="ellipsis-vertical" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent minWidth={240} placement="bottom-start">
+        <DropdownMenuItem>
+          <DropdownMenuItemIcon name="eye-outline" />
+          <DropdownMenuItemTitle>View Post</DropdownMenuItemTitle>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <DropdownMenuItemIcon name="bookmark-outline" />
+          <DropdownMenuItemTitle>Add to list</DropdownMenuItemTitle>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <DropdownMenuItemIcon name="return-up-forward-outline" />
+          <DropdownMenuItemTitle>Forward</DropdownMenuItemTitle>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <DropdownMenuItemIcon name="flag-outline" />
+          <DropdownMenuItemTitle>Report</DropdownMenuItemTitle>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <DropdownMenuItemIcon name="ban-outline" />
+          <DropdownMenuItemTitle>Block</DropdownMenuItemTitle>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <DropdownMenuItemIcon name="notifications-off-outline" />
+          <DropdownMenuItemTitle>Mute notifications</DropdownMenuItemTitle>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+```

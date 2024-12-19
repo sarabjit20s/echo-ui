@@ -1,0 +1,75 @@
+---
+title: Portal
+description: Render children into a different part of your app
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { readUtilFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+<Step>
+Copy and paste the following code into `utils/portal.tsx`.
+<DynamicCodeBlock lang="tsx" code={readUtilFile('portal', 'tsx')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+</Steps>
+
+## Setup
+
+<Steps>
+<Step>
+Wrap your app with `PortalProvider` component.
+<Tabs groupId='framework' persist items={['React Native', 'Expo']}>
+```tsx tab="React Native" title="App.tsx"
+import { PortalProvider } from '@/utils/portal';
+
+export default function App() {
+  return (
+    <PortalProvider>
+      {/* Your app */}
+    </PortalProvider>
+  )
+}
+```
+
+```tsx tab="Expo" title="app/_layout.tsx"
+import { PortalProvider } from '@/utils/portal';
+
+export default function RootLayout() {
+  return (
+    <PortalProvider>
+      {/* Your app */}
+    </PortalProvider>
+  )
+}
+```
+</Tabs>
+
+</Step>
+</Steps>
+
+## Usage
+
+```tsx title="MyComponent.tsx"
+import React from 'react';
+import { View } from 'react-native';
+
+import { Portal } from '@/utils/portal';
+
+export function MyComponent() {
+
+    return (
+        <View>
+            <Portal>
+                {/* Your portal content */}
+            </Portal>
+        </View>
+    )
+}
+```

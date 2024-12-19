@@ -1,18 +1,9 @@
+import React from 'react';
 import Link from 'next/link';
 import { Github, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * The main entry point of the website.
- *
- * This component is responsible for rendering the main hero section of the
- * website. It renders a centered hero section with a greeting and a call to
- * action to explore the documentation.
- *
- * @returns The main entry point of the website.
- */
-/******  a4b7f965-2fac-43f5-8c55-3f0019a52d85  *******/ export default function HomePage() {
+export default function HomePage() {
   return (
     <main className="flex flex-1 flex-col gap-4 justify-center items-center text-center">
       <Hero />
@@ -23,10 +14,10 @@ import { Button } from '@/components/ui/button';
 function Hero() {
   return (
     <div className="flex flex-col gap-4 items-center text-center max-w-2xl">
-      <h1 className="text-6xl font-bold tracking-tighter text-fd-foreground">
+      <h1 className="text-4xl font-bold tracking-tight text-fd-foreground sm:text-5xl md:text-6xl">
         Your building blocks for stunning mobile apps.
       </h1>
-      <p className="text-xl text-fd-muted-foreground">
+      <p className="text-lg text-fd-muted-foreground md:text-xl">
         A collection of reusable React Native components to speed up your
         development.
       </p>

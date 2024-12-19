@@ -1,16 +1,18 @@
 ---
-title: Quick Start
-description: Getting Started with EchoUI
+title: Getting Started
+description: Getting Started with Echo UI
 ---
 
 import { Step, Steps } from 'fumadocs-ui/components/steps';
 import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { File, Folder, Files } from 'fumadocs-ui/components/files';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readStylesFile, readTokenFile } from '@/lib/readFile';
 
 ## Introduction
 
-EchoUI is a collection of pre-built, high-quality React Native components designed to accelerate your mobile app development. Components are designed to deliver smooth and efficient performance on both Android and iOS. All components are made with [`react-native-unistyles`](https://www.unistyl.es/).
+**EchoUI** is a collection of pre-built, high-quality React Native components designed to accelerate your mobile app development. Components are designed to deliver smooth and efficient performance on both Android and iOS. All components are made with [`react-native-unistyles`](https://www.unistyl.es/).
 
 ## Installation
 
@@ -36,686 +38,51 @@ yarn add react-native-unistyles
 </Tabs>
 
 <Step>
-### Setup Unistyles and Theming
+### Configure Themes
 
-1. Create a `styles` directory in your project. This is where you will keep your all themes, tokens or design system.
-2. Create a `tokens` directory in your project. This is where you will keep your all tokens.
-3. You need to create `colors.ts`, `radius.ts`, `space.ts` and `typography.ts` files in your `tokens` directory.
-
-4. Add the following code to your respective tokens files.
-<Callout title="Typography">Download [Inter](https://rsms.me/inter) font and follow this [docs](https://docs.expo.dev/develop/user-interface/fonts/#use-a-local-font-file) if you are using Expo to use it in your project.</Callout>
-<Tabs groupId='tokens' persist items={['colors.ts', 'radius.ts', 'space.ts', 'typography.ts']}>
-```ts tab="colors.ts"
-const blackA = {
-  blackA1: 'hsla(0, 0%, 0%, 0.05)',
-  blackA2: 'hsla(0, 0%, 0%, 0.1)',
-  blackA3: 'hsla(0, 0%, 0%, 0.15)',
-  blackA4: 'hsla(0, 0%, 0%, 0.2)',
-  blackA5: 'hsla(0, 0%, 0%, 0.3)',
-  blackA6: 'hsla(0, 0%, 0%, 0.4)',
-  blackA7: 'hsla(0, 0%, 0%, 0.5)',
-  blackA8: 'hsla(0, 0%, 0%, 0.6)',
-  blackA9: 'hsla(0, 0%, 0%, 0.7)',
-  blackA10: 'hsla(0, 0%, 0%, 0.8)',
-  blackA11: 'hsla(0, 0%, 0%, 0.9)',
-  blackA12: 'hsla(0, 0%, 0%, 0.95)',
-};
-
-const whiteA = {
-  whiteA1: 'hsla(0, 0%, 100%, 0.05)',
-  whiteA2: 'hsla(0, 0%, 100%, 0.1)',
-  whiteA3: 'hsla(0, 0%, 100%, 0.15)',
-  whiteA4: 'hsla(0, 0%, 100%, 0.2)',
-  whiteA5: 'hsla(0, 0%, 100%, 0.3)',
-  whiteA6: 'hsla(0, 0%, 100%, 0.4)',
-  whiteA7: 'hsla(0, 0%, 100%, 0.5)',
-  whiteA8: 'hsla(0, 0%, 100%, 0.6)',
-  whiteA9: 'hsla(0, 0%, 100%, 0.7)',
-  whiteA10: 'hsla(0, 0%, 100%, 0.8)',
-  whiteA11: 'hsla(0, 0%, 100%, 0.9)',
-  whiteA12: 'hsla(0, 0%, 100%, 0.95)',
-};
-
-const primary = {
-  primary1: '#fcfdfe',
-  primary2: '#f6f9ff',
-  primary3: '#ecf2ff',
-  primary4: '#ddeaff',
-  primary5: '#cddfff',
-  primary6: '#b9d2ff',
-  primary7: '#a2bfff',
-  primary8: '#81a5f9',
-  primary9: '#3a6af8',
-  primary10: '#345fde',
-  primary11: '#305ad8',
-  primary12: '#192d63',
-
-  primaryA1: '#0055aa03',
-  primaryA2: '#0055ff09',
-  primaryA3: '#0051ff13',
-  primaryA4: '#0062ff22',
-  primaryA5: '#005cff32',
-  primaryA6: '#005cff46',
-  primaryA7: '#0050ff5d',
-  primaryA8: '#0049f37e',
-  primaryA9: '#003ef6c5',
-  primaryA10: '#0036d6cb',
-  primaryA11: '#0034cfcf',
-  primaryA12: '#001652e6',
-
-  primaryContrast: '#fff',
-  primarySurface: '#f4f8ffcc',
-  primaryIndicator: '#3a6af8',
-  primaryTrack: '#3a6af8',
-} as const;
-
-const primaryDark = {
-  primary1: '#0c111c',
-  primary2: '#111725',
-  primary3: '#172448',
-  primary4: '#1d2e61',
-  primary5: '#243974',
-  primary6: '#2d4484',
-  primary7: '#375098',
-  primary8: '#405eb2',
-  primary9: '#3d63dd',
-  primary10: '#3f5cb0',
-  primary11: '#93b4ff',
-  primary12: '#d5e2ff',
-
-  primaryA1: '#0012fb0c',
-  primaryA2: '#1156f916',
-  primaryA3: '#2b64ff3b',
-  primaryA4: '#3567ff56',
-  primaryA5: '#3f71fd6b',
-  primaryA6: '#4b7afd7c',
-  primaryA7: '#5480ff91',
-  primaryA8: '#5783ffad',
-  primaryA9: '#4571ffdb',
-  primaryA10: '#5580feab',
-  primaryA11: '#93b4ff',
-  primaryA12: '#d5e2ff',
-
-  primaryContrast: '#fff',
-  primarySurface: '#111d3980',
-  primaryIndicator: '#3d63dd',
-  primaryTrack: '#3d63dd',
-};
-
-const neutral = {
-  neutral1: '#fcfcfd',
-  neutral2: '#f9f9fb',
-  neutral3: '#eff0f3',
-  neutral4: '#e7e8ec',
-  neutral5: '#e0e1e6',
-  neutral6: '#d8d9e0',
-  neutral7: '#cdced7',
-  neutral8: '#b9bbc6',
-  neutral9: '#8b8d98',
-  neutral10: '#80828d',
-  neutral11: '#62636c',
-  neutral12: '#1e1f24',
-
-  neutralA1: '#00005503',
-  neutralA2: '#00005506',
-  neutralA3: '#00104010',
-  neutralA4: '#000b3618',
-  neutralA5: '#0009321f',
-  neutralA6: '#00073527',
-  neutralA7: '#00063332',
-  neutralA8: '#00083046',
-  neutralA9: '#00051d74',
-  neutralA10: '#00051b7f',
-  neutralA11: '#0002119d',
-  neutralA12: '#000107e1',
-
-  neutralContrast: '#FFFFFF',
-  neutralSurface: '#ffffffcc',
-  neutralIndicator: '#8b8d98',
-  neutralTrack: '#8b8d98',
-} as const;
-
-const neutralDark = {
-  neutral1: '#111113',
-  neutral2: '#19191b',
-  neutral3: '#222325',
-  neutral4: '#292a2e',
-  neutral5: '#303136',
-  neutral6: '#393a40',
-  neutral7: '#46484f',
-  neutral8: '#5f606a',
-  neutral9: '#6c6e79',
-  neutral10: '#797b86',
-  neutral11: '#b2b3bd',
-  neutral12: '#eeeef0',
-
-  neutralA1: '#1111bb03',
-  neutralA2: '#cbcbf90b',
-  neutralA3: '#d6e2f916',
-  neutralA4: '#d1d9f920',
-  neutralA5: '#d7ddfd28',
-  neutralA6: '#d9defc33',
-  neutralA7: '#dae2fd43',
-  neutralA8: '#e0e3fd60',
-  neutralA9: '#e0e4fd70',
-  neutralA10: '#e3e7fd7e',
-  neutralA11: '#eff0feb9',
-  neutralA12: '#fdfdffef',
-
-  neutralContrast: '#FFFFFF',
-  neutralSurface: 'rgba(0, 0, 0, 0.05)',
-  neutralIndicator: '#6c6e79',
-  neutralTrack: '#6c6e79',
-} as const;
-
-const red = {
-  red1: '#fffcfc',
-  red2: '#fff7f7',
-  red3: '#ffebea',
-  red4: '#ffdcd9',
-  red5: '#ffcdca',
-  red6: '#febdb9',
-  red7: '#f5a9a5',
-  red8: '#eb8f8b',
-  red9: '#e5484d',
-  red10: '#d73840',
-  red11: '#cc2e39',
-  red12: '#64181b',
-
-  redA1: '#ff000003',
-  redA2: '#ff000008',
-  redA3: '#ff0d0015',
-  redA4: '#ff150026',
-  redA5: '#ff0f0035',
-  redA6: '#fc0f0046',
-  redA7: '#e30c015a',
-  redA8: '#d4090074',
-  redA9: '#db0007b7',
-  redA10: '#cc000ac7',
-  redA11: '#c1000ed1',
-  redA12: '#540003e7',
-
-  redContrast: '#fff',
-  redSurface: '#fff5f5cc',
-  redIndicator: '#e5484d',
-  redTrack: '#e5484d',
-} as const;
-
-const redDark = {
-  red1: '#170f0e',
-  red2: '#201312',
-  red3: '#3b1212',
-  red4: '#500f13',
-  red5: '#61171a',
-  red6: '#732425',
-  red7: '#8c3434',
-  red8: '#b54546',
-  red9: '#e5484d',
-  red10: '#d63941',
-  red11: '#ff8f8b',
-  red12: '#ffd2ce',
-
-  redA1: '#ec000007',
-  redA2: '#f22f2011',
-  redA3: '#ff17172d',
-  redA4: '#fe0a1944',
-  redA5: '#ff232c56',
-  redA6: '#ff404269',
-  redA7: '#ff555584',
-  redA8: '#ff5d5eb0',
-  redA9: '#fe4e54e4',
-  redA10: '#fe414bd4',
-  redA11: '#ff8f8b',
-  redA12: '#ffd2ce',
-
-  redContrast: '#fff',
-  redSurface: '#2f151380',
-  redIndicator: '#e5484d',
-  redTrack: '#e5484d',
-} as const;
-
-const green = {
-  green1: '#fbfefc',
-  green2: '#f4fbf7',
-  green3: '#e5f6eb',
-  green4: '#d6f1df',
-  green5: '#c4e8d1',
-  green6: '#adddc0',
-  green7: '#8fcea8',
-  green8: '#60b887',
-  green9: '#30a46c',
-  green10: '#289662',
-  green11: '#00814c',
-  green12: '#1d3b2a',
-
-  greenA1: '#00c04004',
-  greenA2: '#00a3460b',
-  greenA3: '#00a73b1a',
-  greenA4: '#00a83829',
-  greenA5: '#019c393b',
-  greenA6: '#00963c52',
-  greenA7: '#00903970',
-  greenA8: '#008d3f9f',
-  greenA9: '#008f4acf',
-  greenA10: '#008345d7',
-  greenA11: '#00814c',
-  greenA12: '#00220fe2',
-
-  greenContrast: '#fff',
-  greenSurface: '#f1faf5cc',
-  greenIndicator: '#30a46c',
-  greenTrack: '#30a46c',
-} as const;
-
-const greenDark = {
-  green1: '#0c130f',
-  green2: '#121b16',
-  green3: '#152c1f',
-  green4: '#143b27',
-  green5: '#1b4930',
-  green6: '#23573b',
-  green7: '#2b6848',
-  green8: '#327c55',
-  green9: '#30a46c',
-  green10: '#1d9760',
-  green11: '#63d196',
-  green12: '#b2f1cb',
-
-  greenA1: '#00bb0003',
-  greenA2: '#29f9850b',
-  greenA3: '#35ff8d1d',
-  greenA4: '#22ff8e2d',
-  greenA5: '#3cff953c',
-  greenA6: '#4fffa04b',
-  greenA7: '#58fda65e',
-  greenA8: '#5bffa873',
-  greenA9: '#44ffa49e',
-  greenA10: '#27ff9d90',
-  greenA11: '#77ffb6ce',
-  greenA12: '#bcffd7f0',
-
-  greenContrast: '#fff',
-  greenSurface: '#13251b80',
-  greenIndicator: '#30a46c',
-  greenTrack: '#30a46c',
-} as const;
-
-const commonColors = {
-  white: '#fff',
-  black: '#000',
-  transparent: 'transparent',
-  ...blackA,
-  ...whiteA,
-};
-
-const lightThemeColors = {
-  ...commonColors,
-  ...primary,
-  ...neutral,
-  ...red,
-  ...green,
-
-  background: '#fff',
-  overlay: blackA.blackA6,
-  shadow: neutral.neutralA9,
-} as const;
-
-const darkThemeColors = {
-  ...commonColors,
-  ...primaryDark,
-  ...neutralDark,
-  ...redDark,
-  ...greenDark,
-
-  background: '#020202',
-  overlay: blackA.blackA8,
-  shadow: neutral.neutralA11,
-} as const;
-
-type Color = 'primary' | 'neutral' | 'red' | 'green';
-export type ColorStep =
-  | '1'
-  | '2'
-  | '3'
-  | '4'
-  | '5'
-  | '6'
-  | '7'
-  | '8'
-  | '9'
-  | '10'
-  | '11'
-  | '12'
-  | 'A1'
-  | 'A2'
-  | 'A3'
-  | 'A4'
-  | 'A5'
-  | 'A6'
-  | 'A7'
-  | 'A8'
-  | 'A9'
-  | 'A10'
-  | 'A11'
-  | 'A12'
-  | 'Contrast'
-  | 'Surface'
-  | 'Indicator'
-  | 'Track';
-
-export { lightThemeColors, darkThemeColors };
-export type { Color };
-
+1. Create a `styles` directory in your project. This is where you will keep your theme configuration.
+2. Create a `tokens` directory inside your `styles` directory.
+3. Install Radix UI Colors:
+<Tabs groupId='package-manager' persist items={['npm', 'pnpm', 'yarn']}>
+```bash tab="npm"
+npm install @radix-ui/colors
 ```
 
-```ts tab="radius.ts"
-export const radius = {
-  none: 0,
-  xs: 4,
-  sm: 8,
-  md: 12,
-  lg: 16,
-  xl: 24,
-  full: 9999,
-} as const;
-
-export type Radius = keyof typeof radius;
+```bash tab="pnpm"
+pnpm add @radix-ui/colors
 ```
 
-```ts tab="space.ts"
-export const space = {
-  0: 0,
-  1: 1,
-  2: 2,
-  4: 4,
-  6: 6,
-  8: 8,
-  10: 10,
-  12: 12,
-  14: 14,
-  16: 16,
-  18: 18,
-  20: 20,
-  24: 24,
-  28: 28,
-  32: 32,
-  36: 36,
-  40: 40,
-  44: 44,
-  48: 48,
-  56: 56,
-  64: 64,
-  80: 80,
-  96: 96,
-  112: 112,
-  128: 128,
-  144: 144,
-} as const;
-
-export type Space = keyof typeof space;
-```
-
-```ts tab="typography.ts"
-// font name should be the same as the file name
-export type FontFamily =
-  | 'Inter-Regular'
-  | 'Inter-Medium'
-  | 'Inter-SemiBold'
-  | 'Inter-Bold'
-  | 'InterDisplay-ExtraBold';
-
-export const fontFamilies = {
-  interRegular: 'Inter-Regular',
-  interMedium: 'Inter-Medium',
-  interSemiBold: 'Inter-SemiBold',
-  interBold: 'Inter-Bold',
-  interDisplayExtraBold: 'InterDisplay-ExtraBold',
-} as const;
-
-// Using the `Major Second` type scale (1.125)
-// Base font size: 16px
-export type FontSize =
-  | 10
-  | 11
-  | 12
-  | 14
-  | 16
-  | 18
-  | 20
-  | 22
-  | 25
-  | 28
-  | 32
-  | 36
-  | 40
-  | 45
-  | 51
-  | 57
-  | 64
-  | 72;
-
-type FontSizes = {
-  [key in FontSize]: key;
-};
-
-export const fontSizes: FontSizes = {
-  10: 10,
-  11: 11,
-  12: 12,
-  14: 14,
-  16: 16,
-  18: 18,
-  20: 20,
-  22: 22,
-  25: 25,
-  28: 28,
-  32: 32,
-  36: 36,
-  40: 40,
-  45: 45,
-  51: 51,
-  57: 57,
-  64: 64,
-  72: 72,
-} as const;
-
-export type TextVariant = {
-  fontFamily: FontFamily;
-  fontSize: FontSize;
-  lineHeight: number;
-};
-
-export type TextVariants = {
-  displayLg: TextVariant;
-  displayMd: TextVariant;
-  displaySm: TextVariant;
-  displayXs: TextVariant;
-  headingLg: TextVariant;
-  headingMd: TextVariant;
-  headingSm: TextVariant;
-  headingXs: TextVariant;
-  labelLg: TextVariant;
-  labelMd: TextVariant;
-  labelSm: TextVariant;
-  labelXs: TextVariant;
-  bodyLg: TextVariant;
-  bodyMd: TextVariant;
-  bodySm: TextVariant;
-  bodyXs: TextVariant;
-};
-
-export const textVariants: TextVariants = {
-  displayLg: {
-    fontFamily: fontFamilies.interDisplayExtraBold,
-    fontSize: fontSizes[72],
-    lineHeight: 81,
-  },
-  displayMd: {
-    fontFamily: fontFamilies.interDisplayExtraBold,
-    fontSize: fontSizes[57],
-    lineHeight: 64,
-  },
-  displaySm: {
-    fontFamily: fontFamilies.interDisplayExtraBold,
-    fontSize: fontSizes[51],
-    lineHeight: 57,
-  },
-  displayXs: {
-    fontFamily: fontFamilies.interDisplayExtraBold,
-    fontSize: fontSizes[45],
-    lineHeight: 51,
-  },
-  headingLg: {
-    fontFamily: fontFamilies.interSemiBold,
-    fontSize: fontSizes[40],
-    lineHeight: 50,
-  },
-  headingMd: {
-    fontFamily: fontFamilies.interSemiBold,
-    fontSize: fontSizes[28],
-    lineHeight: 35,
-  },
-  headingSm: {
-    fontFamily: fontFamilies.interSemiBold,
-    fontSize: fontSizes[22],
-    lineHeight: 28,
-  },
-  headingXs: {
-    fontFamily: fontFamilies.interSemiBold,
-    fontSize: fontSizes[18],
-    lineHeight: 23,
-  },
-  labelLg: {
-    fontFamily: fontFamilies.interMedium,
-    fontSize: fontSizes[18],
-    lineHeight: 24,
-  },
-  labelMd: {
-    fontFamily: fontFamilies.interMedium,
-    fontSize: fontSizes[16],
-    lineHeight: 22,
-  },
-  labelSm: {
-    fontFamily: fontFamilies.interMedium,
-    fontSize: fontSizes[14],
-    lineHeight: 19,
-  },
-  labelXs: {
-    fontFamily: fontFamilies.interMedium,
-    fontSize: fontSizes[12],
-    lineHeight: 16,
-  },
-  bodyLg: {
-    fontFamily: fontFamilies.interRegular,
-    fontSize: fontSizes[18],
-    lineHeight: 27,
-  },
-  bodyMd: {
-    fontFamily: fontFamilies.interRegular,
-    fontSize: fontSizes[16],
-    lineHeight: 24,
-  },
-  bodySm: {
-    fontFamily: fontFamilies.interRegular,
-    fontSize: fontSizes[14],
-    lineHeight: 21,
-  },
-  bodyXs: {
-    fontFamily: fontFamilies.interRegular,
-    fontSize: fontSizes[12],
-    lineHeight: 18,
-  },
-} as const;
-
-export const typography = {
-  fontFamilies,
-  fontSizes,
-  textVariants,
-} as const;
+```bash tab="yarn"
+yarn add @radix-ui/colors
 ```
 </Tabs>
+<Callout>To understand the color palette, see [Radix UI Colors](https://www.radix-ui.com/colors).</Callout>
 
-5. Create a `themes.ts` file in your `styles` directory and add the following code:
-```ts
-import { lightThemeColors, darkThemeColors } from './tokens/colors';
-import { radius } from './tokens/radius';
-import { space } from './tokens/space';
-import { typography } from './tokens/typography';
+4. Create a `colors.ts` file in your `tokens` directory and add the following code:
+<DynamicCodeBlock lang="ts" code={readTokenFile('colors')} />
 
-export const lightTheme = {
-  colors: lightThemeColors,
-  radius,
-  space,
-  typography,
-} as const;
+5. Create a `typography.ts` file in your `tokens` directory and add the following code:
 
-export const darkTheme = {
-  colors: darkThemeColors,
-  radius,
-  space,
-  typography,
-} as const;
+<Callout>Download [Inter](https://rsms.me/inter) font and follow these [docs](https://docs.expo.dev/develop/user-interface/fonts/#use-a-local-font-file) if you are using Expo to use it in your project.</Callout>
 
-export const themes = {
-  light: lightTheme,
-  dark: darkTheme,
-} as const;
+<DynamicCodeBlock lang="ts" code={readTokenFile('typography')} />
 
-// every theme should have a same structure as lightTheme
-export type Theme = typeof lightTheme;
-export type Themes = typeof themes;
+6. Create a `space.ts` file in your `tokens` directory and add the following code:
+<DynamicCodeBlock lang="ts" code={readTokenFile('space')} />
 
-```
+7. Create a `radius.ts` file in your `tokens` directory and add the following code:
+<DynamicCodeBlock lang="ts" code={readTokenFile('radius')} />
 
-6. Create a `breakpoints.ts` file in your `styles` directory and add the following code:
-```ts
-export const breakpoints = {
-  mobile: 0,
-  tablet: 768,
-} as const;
+8. Create a `themes.ts` file in your `styles` directory and add the following code:
+<DynamicCodeBlock lang="ts" code={readStylesFile('themes')} />
 
-export type Breakpoint = keyof typeof breakpoints;
-export type Breakpoints = typeof breakpoints;
+9. Create a `breakpoints.ts` file in your `styles` directory and add the following code:
+<DynamicCodeBlock lang="ts" code={readStylesFile('breakpoints')} />
 
-```
+</Step>
 
-7. Create a `unistyles.ts` file in your `styles` directory and add the following code:
-```ts
-/* eslint-disable @typescript-eslint/no-empty-object-type */
-import { UnistylesRegistry } from 'react-native-unistyles';
-
-import { Breakpoints, breakpoints } from './breakpoints';
-import { themes, Themes } from './themes';
-
-declare module 'react-native-unistyles' {
-  export interface UnistylesBreakpoints extends Breakpoints {}
-  export interface UnistylesThemes extends Themes {}
-}
-
-UnistylesRegistry.addBreakpoints(breakpoints).addThemes(themes).addConfig({
-  adaptiveThemes: true,
-});
-
-```
-<Callout>
-Your final `styles` folder structure should look like this:
-<Files>
-  <Folder name="styles" defaultOpen>
-    <Folder name="tokens" defaultOpen>
-        <File name="colors.ts" />
-        <File name="radius.ts" />
-        <File name="space.ts" />
-        <File name="typography.ts" />
-    </Folder>
-    <File name="breakpoints.ts" />
-    <File name="themes.ts" />
-    <File name="unistyles.ts" />
-  </Folder>
-</Files>
-</Callout>
-
-
-8. Configure paths aliases:
+<Step>
+### Configure paths aliases
 <Tabs groupId='framework' persist items={['React Native', 'Expo']}>
 
 ```js tab="React Native"
@@ -756,28 +123,57 @@ module.exports = {
 ```
 </Tabs>
 
-9. Import `unistyles.ts` in the root of your project. For example:
+</Step>
+
+<Step>
+### Configure Unistyles
+1. Create a `unistyles.ts` file in your `styles` directory and add the following code:
+<DynamicCodeBlock lang="ts" code={readStylesFile('unistyles')} />
+
+<Callout title="Info">
+Your final `styles` folder structure should look like this:
+<Files>
+  <Folder name="styles" defaultOpen>
+    <Folder name="tokens" defaultOpen>
+        <File name="colors.ts" />
+        <File name="radius.ts" />
+        <File name="space.ts" />
+        <File name="typography.ts" />
+    </Folder>
+    <File name="breakpoints.ts" />
+    <File name="themes.ts" />
+    <File name="unistyles.ts" />
+  </Folder>
+</Files>
+</Callout>
+
+2. Import `unistyles.ts` in the root of your project and wrap your app with `UnistylesProvider` component. For example:
+
 <Tabs groupId='framework' persist items={['React Native', 'Expo']}>
-```js tab="React Native"
-// App.tsx
+```tsx tab="React Native" title="App.tsx"
+import { UnistylesProvider } from 'react-native-unistyles';
 
 import '@/styles/unistyles';
 
 export default function App() {
   return (
-      ...
+    <UnistylesProvider>
+      {/* Your app */}
+    </UnistylesProvider>
   )
 }
 ```
 
-```ts tab="Expo"
-// app/_layout.tsx
+```tsx tab="Expo" title="app/_layout.tsx"
+import { UnistylesProvider } from 'react-native-unistyles';
 
 import '@/styles/unistyles';
 
 export default function RootLayout() {
   return (
-    ...
+    <UnistylesProvider>
+      {/* Your app */}
+    </UnistylesProvider>
   );
 }
 ```
@@ -792,3 +188,11 @@ You can now start adding components to your app.
 </Step>
 
 </Steps>
+
+## Essential Components, Hooks and Utilities
+To make the most out of this library, we recommend familiarizing yourself with the following components, hooks, and utilities. These are foundational and are used frequently across various components in the library:
+
+- [**Text**](/docs/components/text): A versatile text component designed for consistent typography.
+- [**Icon**](/docs/components/icon): A customizable icon component for adding icons to your UI.
+- [**Slot**](/docs/utils/slot): A utility for flexible component composition.
+- [**useControllableState**](/docs/hooks/useControllableState): A hook for managing controllable and uncontrollable states seamlessly.

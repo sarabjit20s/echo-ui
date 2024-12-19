@@ -1,0 +1,55 @@
+---
+title: Slot
+description: A utility for flexible component composition.
+---
+
+import Link from 'next/link'
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readUtilFile } from '@/lib/readFile';
+
+<Callout>
+This utility has been copied from the Radix UI library. View the original source [here](https://github.com/radix-ui/primitives/blob/main/packages/react/slot/src/Slot.tsx)
+</Callout>
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/utils/compose-refs'}>composeRefs</Link>
+</Step>
+
+<Step>
+Copy and paste the following code into `utils/slot.tsx`.
+<DynamicCodeBlock lang="tsx" code={readUtilFile('slot', 'tsx')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyComponent.tsx"
+import React from 'react';
+import { View, ViewProps } from 'react-native';
+
+import { Slot } from '@/utils/slot';
+
+type MyComponentProps = ViewProps & {
+    asChild?: boolean
+}
+
+export function MyComponent({ asChild = false, ...restProps }: MyComponentProps) {
+
+    const Comp = asChild ? Slot : View;
+
+    return (
+        <Comp {...restProps} />
+    )
+}
+```

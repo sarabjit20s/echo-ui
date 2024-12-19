@@ -1,0 +1,48 @@
+---
+title: useInsets
+description: Use insets from the `react-native-unistyles`
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { readHookFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+<Step>
+Copy and paste the following code into `hooks/useInsets.ts`.
+<DynamicCodeBlock lang="ts" code={readHookFile('useInsets')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+</Steps>
+
+## Usage
+
+```tsx title="MyComponent.tsx"
+import React from 'react';
+import { View } from 'react-native';
+
+import { useInsets } from '@/hooks/useInsets';
+
+export function MyComponent() {
+    const { top, right, bottom, left } = useInsets();
+
+    return (
+        <View
+            style={{
+                paddingTop: top,
+                paddingRight: right,
+                paddingBottom: bottom,
+                paddingLeft: left,
+                backgroundColor: 'red',
+            }}
+        >
+            {/* ... */}
+        </View>
+    )
+}
+```

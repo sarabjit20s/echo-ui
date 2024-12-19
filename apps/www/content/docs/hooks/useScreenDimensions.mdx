@@ -1,0 +1,46 @@
+---
+title: useScreenDimensions
+description: A hook that returns the screen dimensions.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { readHookFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+<Step>
+Copy and paste the following code into `hooks/useScreenDimensions.ts`.
+<DynamicCodeBlock lang="ts" code={readHookFile('useScreenDimensions')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+</Steps>
+
+## Usage
+
+```tsx title="MyComponent.tsx"
+import React from 'react';
+import { View } from 'react-native';
+
+import { useScreenDimensions } from '@/hooks/useScreenDimensions';
+
+export function MyComponent() {
+    const { width, height } = useScreenDimensions();
+
+    return (
+        <View
+            style={{
+                width,
+                height,
+                backgroundColor: 'red',
+            }}
+        >
+            {/* ... */}
+        </View>
+    )
+}
+```

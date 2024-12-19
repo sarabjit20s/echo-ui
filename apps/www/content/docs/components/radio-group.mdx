@@ -1,0 +1,78 @@
+---
+title: Radio Group
+description: Displays a group of radio buttons.
+---
+
+import Link from 'next/link';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readComponentFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/utils/slot'}>Slot</Link>
+  - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/RadioGroup.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('RadioGroup')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyRadioGroup.tsx"
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
+
+import {
+  RadioGroup,
+  RadioGroupItem,
+  RadioGroupIndicator
+} from '@/components/ui/RadioGroup';
+import { Text } from '@/components/ui/Text';
+
+export function MyRadioGroup() {
+  const { styles } = useStyles(stylesheet);
+  return (
+    <RadioGroup style={styles.radioGroup}>
+      <Text variant="labelMd" highContrast>
+        Do you like video games?
+      </Text>
+      <RadioGroupItem value="yes" style={styles.item}>
+        <RadioGroupIndicator />
+        <Text variant="labelMd" highContrast>
+          Yes
+        </Text>
+      </RadioGroupItem>
+      <RadioGroupItem value="no" style={styles.item}>
+        <RadioGroupIndicator />
+        <Text variant="labelMd" highContrast>
+          No
+        </Text>
+      </RadioGroupItem>
+    </RadioGroup>
+  );
+}
+
+const stylesheet = createStyleSheet(theme => ({
+  radioGroup: {
+    gap: theme.space[8],
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.space[8],
+  },
+}))
+```

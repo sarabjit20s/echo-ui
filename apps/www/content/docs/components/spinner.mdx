@@ -1,6 +1,6 @@
 ---
-title: Text
-description: Display text using well-defined typographic styles.
+title: Spinner
+description: Displays an animated loading indicator.
 ---
 
 import Link from 'next/link';
@@ -14,13 +14,13 @@ import { readComponentFile } from '@/lib/readFile';
 
 <Step>
 Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/utils/slot'}>Slot</Link>
+#### External Dependencies
+  - [React Native Svg](https://github.com/software-mansion/react-native-svg)
 </Step>
 
 <Step>
-Copy and paste the following code into `components/ui/Text.tsx`.
-<DynamicCodeBlock lang="tsx" code={readComponentFile('Text')} />
+Copy and paste the following code into `components/ui/Spinner.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Spinner')} />
 </Step>
 
 <Step>
@@ -31,12 +31,12 @@ Update the import paths to match your project setup.
 
 ## Usage
 
-```tsx title="MyText.tsx"
-import { Text } from '@/components/ui/Text';
+```tsx title="MySpinner.tsx"
+import { Spinner } from '@/components/ui/Spinner';
 
-export function MyText() {
+export function MySpinner() {
   return (
-    <Text>This is the text component</Text>
+    <Spinner />
   );
 }
 ```
