@@ -14,6 +14,7 @@
     "@radix-ui/react-collapsible": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
+    "@vercel/analytics": "^1.4.1",
     "class-variance-authority": "^0.7.1",
     "fumadocs-core": "14.6.1",
     "fumadocs-mdx": "11.1.2",
@@ -26,8 +27,8 @@
     "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
-    "@fumadocs/cli": "^0.0.4",
     "@echo-ui/eslint-config": "workspace:*",
+    "@fumadocs/cli": "^0.0.4",
     "@types/mdx": "^2.0.13",
     "@types/node": "22.10.2",
     "@types/react": "^19.0.1",

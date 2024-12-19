@@ -3,6 +3,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { RootProvider } from 'fumadocs-ui/provider';
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: 'Echo UI',
@@ -33,7 +34,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
+        <RootProvider>
+          {children}
+          <Analytics />
+        </RootProvider>
       </body>
     </html>
   );
