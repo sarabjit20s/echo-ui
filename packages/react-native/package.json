@@ -1,0 +1,48 @@
+{
+  "name": "@echo-ui/react-native",
+  "version": "0.0.0",
+  "description": "A collection of pre-built, high-quality React Native components designed to accelerate your mobile app development.",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    "./Accordion": "./src/components/Accordion.tsx",
+    "./Alert": "./src/components/Alert.tsx",
+    "./Avatar": "./src/components/Avatar.tsx",
+    "./Button": "./src/components/Button.tsx",
+    "./Checkbox": "./src/components/Checkbox.tsx",
+    "./Dialog": "./src/components/Dialog.tsx",
+    "./DropdownMenu": "./src/components/DropdownMenu.tsx",
+    "./Icon": "./src/components/Icon.tsx",
+    "./Popover": "./src/components/Popover.tsx",
+    "./Popup": "./src/components/Popup.tsx",
+    "./RadioGroup": "./src/components/RadioGroup.tsx",
+    "./Separator": "./src/components/Separator.tsx",
+    "./Spinner": "./src/components/Spinner.tsx",
+    "./Text": "./src/components/Text.tsx",
+    "./TextArea": "./src/components/TextArea.tsx",
+    "./TextInput": "./src/components/TextInput.tsx",
+    "./useControllableState": "./src/hooks/useControllableState.ts",
+    "./useInsets": "./src/hooks/useInsets.ts",
+    "./usePositioning": "./src/hooks/usePositioning.ts",
+    "./useScreenDimensions": "./src/hooks/useScreenDimensions.ts",
+    "./composeRefs": "./src/utils/composeRefs.ts",
+    "./portal": "./src/utils/portal.tsx",
+    "./slot": "./src/utils/slot.tsx"
+  },
+  "devDependencies": {
+    "@echo-ui/eslint-config": "workspace:*",
+    "@echo-ui/typescript-config": "workspace:*",
+    "@radix-ui/colors": "^3.0.0",
+    "@react-native-vector-icons/common": "^11.0.0",
+    "@react-native-vector-icons/ionicons": "^7.4.0",
+    "@types/react": "18.3.12",
+    "@types/react-native": "^0.73.0",
+    "react": "18.3.1",
+    "react-native": "^0.76.5",
+    "react-native-reanimated": "^3.16.5",
+    "react-native-svg": "^15.10.1",
+    "react-native-unistyles": "^2.20.0"
+  }
+}

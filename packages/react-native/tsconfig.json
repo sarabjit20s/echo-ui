@@ -1,0 +1,8 @@
+{
+  "extends": "@echo-ui/typescript-config/react-library.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
