@@ -10,6 +10,7 @@
     "./Accordion": "./src/components/Accordion.tsx",
     "./Alert": "./src/components/Alert.tsx",
     "./Avatar": "./src/components/Avatar.tsx",
+    "./Badge": "./src/components/Badge.tsx",
     "./Button": "./src/components/Button.tsx",
     "./Checkbox": "./src/components/Checkbox.tsx",
     "./Dialog": "./src/components/Dialog.tsx",
