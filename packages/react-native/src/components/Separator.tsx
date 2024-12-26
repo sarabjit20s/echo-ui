@@ -1,46 +1,47 @@
-import React from 'react';
-import { View, ViewProps } from 'react-native';
+import * as React from 'react';
+import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Slot } from '@/utils/slot';
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 
-type SeparatorProps = ViewProps & {
-  asChild?: boolean;
-  color?: Color;
-  colorStep?: ColorStep;
-  orientation?: 'horizontal' | 'vertical';
-  type?: 'hairline' | 'pixel' | 'cell' | 'section';
-};
+type SeparatorProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    color?: Color;
+    colorStep?: ColorStep;
+    orientation?: 'horizontal' | 'vertical';
+    type?: 'hairline' | 'pixel' | 'cell' | 'section';
+  };
 
-const Separator = React.forwardRef<View, SeparatorProps>(
-  (
-    {
-      asChild = false,
-      color = 'neutral',
-      colorStep = '6',
-      orientation = 'horizontal',
-      type = 'cell',
-      style,
-    }: SeparatorProps,
-    forwardedRef,
-  ) => {
-    const { styles } = useStyles(stylesheet, {
-      type,
-    });
+const Separator = genericForwardRef(function Separator<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  {
+    as,
+    color = 'neutral',
+    colorStep = '6',
+    orientation = 'horizontal',
+    type = 'cell',
+    style,
+    ...restProp
+  }: SeparatorProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { styles } = useStyles(stylesheet, {
+    type,
+  });
 
-    const Comp = asChild ? Slot : View;
+  const Comp = as || View;
 
-    return (
-      <Comp
-        ref={forwardedRef}
-        style={[styles.separator(color, colorStep, orientation), style]}
-      />
-    );
-  },
-);
-
-Separator.displayName = 'Separator';
+  return (
+    <Comp
+      ref={ref}
+      style={[styles.separator(color, colorStep, orientation), style]}
+      {...restProp}
+    />
+  );
+});
 
 const stylesheet = createStyleSheet(({ colors }, rt) => ({
   separator: (

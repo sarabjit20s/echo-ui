@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import {
   NativeSyntheticEvent,
   TextInput as RNTextInput,
@@ -9,8 +9,9 @@ import {
 } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Slot } from '@/utils/slot';
-import { Color } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color } from '@/styles/tokens/colors';
 
 type TextInputContextValue = {
   size: 'sm' | 'md' | 'lg';
@@ -22,11 +23,11 @@ const TextInputContext = React.createContext<TextInputContextValue | null>(
 );
 
 const useTextInput = () => {
-  const ctx = React.useContext(TextInputContext);
-  if (!ctx) {
+  const context = React.useContext(TextInputContext);
+  if (!context) {
     throw new Error('useTextInput must be used within a <TextInput />');
   }
-  return ctx;
+  return context;
 };
 
 type TextInputProps = Omit<RNTextInputProps, 'style'> & {
@@ -42,127 +43,111 @@ type TextInputProps = Omit<RNTextInputProps, 'style'> & {
 const TextInput = React.forwardRef<
   React.ElementRef<typeof RNTextInput>,
   TextInputProps
+>(function TextInput(
+  {
+    color = 'primary',
+    size = 'md',
+    variant = 'outline',
+    cursorColor,
+    placeholderTextColor,
+    selectionColor,
+    startAdornment,
+    endAdornment,
+    onBlur: onBlurProp,
+    onFocus: onFocusProp,
+    textInputStyle: textInputStyleProp,
+    containerStyle,
+    ...restProps
+  }: TextInputProps,
+  ref,
+) {
+  const [focused, setFocused] = React.useState(false);
+
+  const { styles, theme } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
+
+  const hasStartAdornment = !!startAdornment;
+  const hasEndAdornment = !!endAdornment;
+
+  const textInputStyle = React.useMemo(() => {
+    return styles.textInput(
+      color,
+      hasStartAdornment && hasEndAdornment
+        ? 'none'
+        : hasStartAdornment
+          ? 'paddingEnd'
+          : hasEndAdornment
+            ? 'paddingStart'
+            : 'paddingHorizontal',
+    );
+  }, [color, hasEndAdornment, hasStartAdornment, styles]);
+
+  const onFocus = React.useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      setFocused(true);
+      onFocusProp?.(e);
+    },
+    [onFocusProp],
+  );
+  const onBlur = React.useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      setFocused(false);
+      onBlurProp?.(e);
+    },
+    [onBlurProp],
+  );
+
+  return (
+    <TextInputContext.Provider value={{ size, variant }}>
+      <View style={[styles.container(color, focused), containerStyle]}>
+        {startAdornment}
+        <RNTextInput
+          ref={ref}
+          cursorColor={cursorColor || theme.colors[`${color}8`]}
+          placeholderTextColor={placeholderTextColor || theme.colors.neutral10}
+          selectionColor={selectionColor || theme.colors[`${color}8`]}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          style={[textInputStyle, textInputStyleProp]}
+          {...restProps}
+        />
+        {endAdornment}
+      </View>
+    </TextInputContext.Provider>
+  );
+});
+
+type TextInputAdornmentProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    type?: 'action' | 'simple';
+  };
+
+const TextInputAdornment = genericForwardRef(function TextInputAdornment<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
 >(
-  (
-    {
-      color = 'primary',
-      size = 'md',
-      variant = 'outline',
-      cursorColor,
-      placeholderTextColor,
-      selectionColor,
-      startAdornment,
-      endAdornment,
-      onBlur: onBlurProp,
-      onFocus: onFocusProp,
-      textInputStyle: textInputStyleProp,
-      containerStyle,
-      ...restProps
-    }: TextInputProps,
-    forwardedRef,
-  ) => {
-    const [focused, setFocused] = React.useState(false);
+  { as, type = 'simple', style, ...restProps }: TextInputAdornmentProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { size, variant } = useTextInput();
+  const { styles } = useStyles(stylesheet, { size, variant });
 
-    const { styles, theme } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
+  const Comp = as || View;
 
-    const hasStartAdornment = !!startAdornment;
-    const hasEndAdornment = !!endAdornment;
-
-    const textInputStyle = React.useMemo(() => {
-      return styles.textInput(
-        color,
-        hasStartAdornment && hasEndAdornment
-          ? 'none'
-          : hasStartAdornment
-            ? 'paddingEnd'
-            : hasEndAdornment
-              ? 'paddingStart'
-              : 'paddingHorizontal',
-      );
-    }, [color, hasEndAdornment, hasStartAdornment, styles]);
-
-    const onFocus = React.useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-        setFocused(true);
-        onFocusProp?.(e);
-      },
-      [onFocusProp],
-    );
-    const onBlur = React.useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
-        setFocused(false);
-        onBlurProp?.(e);
-      },
-      [onBlurProp],
-    );
-
-    return (
-      <TextInputContext.Provider value={{ size, variant }}>
-        <View style={[styles.container(color, focused), containerStyle]}>
-          {startAdornment}
-          <RNTextInput
-            ref={forwardedRef}
-            cursorColor={cursorColor || theme.colors[`${color}8`]}
-            placeholderTextColor={
-              placeholderTextColor || theme.colors.neutral10
-            }
-            selectionColor={selectionColor || theme.colors[`${color}8`]}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            style={[textInputStyle, textInputStyleProp]}
-            {...restProps}
-          />
-          {endAdornment}
-        </View>
-      </TextInputContext.Provider>
-    );
-  },
-);
-
-TextInput.displayName = 'TextInput';
-
-type TextInputAdornmentProps = ViewProps & {
-  asChild?: boolean;
-  type?: 'action' | 'simple';
-};
-
-const TextInputAdornment = React.forwardRef<
-  React.ElementRef<typeof View>,
-  TextInputAdornmentProps
->(
-  (
-    {
-      asChild = false,
-      type = 'simple',
-      style,
-      ...restProps
-    }: TextInputAdornmentProps,
-    forwardedRef,
-  ) => {
-    const { size, variant } = useTextInput();
-    const { styles } = useStyles(stylesheet, { size, variant });
-
-    const Comp = asChild ? Slot : View;
-
-    return (
-      <Comp
-        ref={forwardedRef}
-        style={[
-          type === 'action'
-            ? styles.actionAdornmentContainer
-            : styles.simpleAdornmentContainer,
-          style,
-        ]}
-        {...restProps}
-      />
-    );
-  },
-);
-
-TextInputAdornment.displayName = 'TextInputAdornment';
+  return (
+    <Comp
+      ref={ref}
+      style={[
+        type === 'action'
+          ? styles.actionAdornmentContainer
+          : styles.simpleAdornmentContainer,
+        style,
+      ]}
+      {...restProps}
+    />
+  );
+});
 
 const stylesheet = createStyleSheet(
   ({ colors, radius, space, typography }) => ({

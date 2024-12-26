@@ -1,25 +1,25 @@
-import React from 'react';
-import { View, ViewProps } from 'react-native';
+import * as React from 'react';
+import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Text, TextProps } from './Text';
 import { Icon, IconProps } from './Icon';
-import { Slot } from '@/utils/slot';
-import { Color } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color } from '@/styles/tokens/colors';
 
+type AlertColor = Color;
 type AlertSize = 'sm' | 'md' | 'lg';
 type AlertVariant = 'soft' | 'outline';
 
-type AlertContextProps = {
-  color: Color;
+type AlertContextValue = {
+  color: AlertColor;
   size: AlertSize;
   variant: AlertVariant;
   highContrast: boolean;
 };
 
-const AlertContext = React.createContext<AlertContextProps | undefined>(
-  undefined,
-);
+const AlertContext = React.createContext<AlertContextValue | null>(null);
 
 const useAlert = () => {
   const ctx = React.useContext(AlertContext);
@@ -29,49 +29,46 @@ const useAlert = () => {
   return ctx;
 };
 
-type AlertProps = ViewProps & {
-  asChild?: boolean;
-  color?: Color;
-  highContrast?: boolean;
-  size?: AlertSize;
-  variant?: AlertVariant;
-};
+type AlertProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    highContrast?: boolean;
+    size?: AlertSize;
+    variant?: AlertVariant;
+    color?: AlertColor;
+  };
 
-const Alert = React.forwardRef<React.ElementRef<typeof View>, AlertProps>(
-  (
-    {
-      asChild = false,
-      color = 'primary',
-      size = 'md',
-      variant = 'soft',
-      highContrast = false,
-      style,
-      ...restProps
-    }: AlertProps,
-    forwardedRef,
-  ) => {
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
+const Alert = genericForwardRef(function Alert<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  {
+    as,
+    color = 'primary',
+    size = 'md',
+    variant = 'soft',
+    highContrast = false,
+    style,
+    ...restProps
+  }: AlertProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
 
-    const Comp = asChild ? Slot : View;
-    return (
-      <AlertContext.Provider value={{ color, highContrast, size, variant }}>
-        <Comp
-          ref={forwardedRef}
-          accessibilityRole="alert"
-          style={[styles.alert(color), style]}
-          {...restProps}
-        />
-      </AlertContext.Provider>
-    );
-  },
-);
+  const Comp = as || View;
 
-Alert.displayName = 'Alert';
-
-type AlertTitleProps = TextProps;
+  return (
+    <AlertContext.Provider value={{ color, highContrast, size, variant }}>
+      <Comp
+        ref={ref}
+        accessibilityRole="alert"
+        style={[styles.alert(color), style]}
+        {...restProps}
+      />
+    </AlertContext.Provider>
+  );
+});
 
 const titleVariantMap: Record<AlertSize, TextProps['variant']> = {
   sm: 'labelSm',
@@ -79,14 +76,15 @@ const titleVariantMap: Record<AlertSize, TextProps['variant']> = {
   lg: 'labelLg',
 };
 
-const AlertTitle = React.forwardRef<
-  React.ElementRef<typeof Text>,
-  AlertTitleProps
->((props: AlertTitleProps, forwardedRef) => {
+type AlertTitleProps<T extends React.ElementType = typeof Text> = TextProps<T>;
+
+const AlertTitle = genericForwardRef(function AlertTitle<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Text>>,
+>(props: AlertTitleProps<T>, ref: React.ForwardedRef<T>) {
   const { color, highContrast, size } = useAlert();
   return (
     <Text
-      ref={forwardedRef}
+      ref={ref}
       color={color}
       variant={titleVariantMap[size]}
       highContrast={highContrast}
@@ -95,34 +93,30 @@ const AlertTitle = React.forwardRef<
   );
 });
 
-AlertTitle.displayName = 'AlertTitle';
-
-type AlertDescriptionProps = TextProps;
-
 const descriptionVariantMap: Record<AlertSize, TextProps['variant']> = {
   sm: 'bodyXs',
   md: 'bodySm',
   lg: 'bodyMd',
 };
 
-const AlertDescription = React.forwardRef<
-  React.ElementRef<typeof Text>,
-  AlertDescriptionProps
->(({ ...restProps }: AlertDescriptionProps, forwardedRef) => {
+type AlertDescriptionProps<T extends React.ElementType = typeof Text> =
+  TextProps<T>;
+
+const AlertDescription = genericForwardRef(function AlertDescription<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Text>>,
+>(props: AlertDescriptionProps<T>, ref: React.ForwardedRef<T>) {
   const { color, highContrast, size } = useAlert();
 
   return (
     <Text
-      ref={forwardedRef}
+      ref={ref}
       color={color}
       variant={descriptionVariantMap[size]}
       highContrast={highContrast}
-      {...restProps}
+      {...props}
     />
   );
 });
-
-AlertDescription.displayName = 'AlertDescription';
 
 type AlertIconProps = IconProps;
 
@@ -135,22 +129,20 @@ const iconSizeMap: Record<AlertSize, IconProps['size']> = {
 const AlertIcon = React.forwardRef<
   React.ElementRef<typeof Icon>,
   AlertIconProps
->(({ ...restProps }: AlertIconProps, forwardedRef) => {
+>(function AlertIcon(props: AlertIconProps, ref) {
   const { color, highContrast, size } = useAlert();
   return (
     <Icon
-      ref={forwardedRef}
+      ref={ref}
       color={color}
       size={iconSizeMap[size]}
       highContrast={highContrast}
-      {...restProps}
+      {...props}
     />
   );
 });
 
-AlertIcon.displayName = 'AlertIcon';
-
-export const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
+const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
   alert: (color: Color) => ({
     width: '100%',
     borderCurve: 'continuous',
@@ -169,7 +161,7 @@ export const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
         lg: {
           gap: space[12],
           padding: space[24],
-          borderRadius: radius.xl,
+          borderRadius: radius.lg,
         },
       },
       variant: {

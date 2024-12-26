@@ -1,74 +1,76 @@
-import React from 'react';
-import { Text as RNText, TextProps as RNTextProps } from 'react-native';
+import * as React from 'react';
+import { Text as RNText } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Slot } from '@/utils/slot';
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 import {
   fontFamilies,
-  FontSize,
-  TextVariants,
+  type FontSize,
+  type TextVariants,
 } from '@/styles/tokens/typography';
 
-type TextProps = RNTextProps & {
-  asChild?: boolean;
-  color?: Color;
-  colorStep?: ColorStep;
-  fontFamily?: keyof typeof fontFamilies;
-  fontSize?: FontSize;
-  textAlign?: 'auto' | 'left' | 'center' | 'right' | 'justify';
-  highContrast?: boolean;
-  /**
-   * Set `true` to inherit the styles from parent Text component instead of using default values
-   */
-  inherit?: boolean;
-  variant?: keyof TextVariants;
-};
+type TextProps<T extends React.ElementType = typeof RNText> =
+  PolymorphicProps<T> & {
+    color?: Color;
+    colorStep?: ColorStep;
+    fontFamily?: keyof typeof fontFamilies;
+    fontSize?: FontSize;
+    textAlign?: 'auto' | 'left' | 'center' | 'right' | 'justify';
+    highContrast?: boolean;
+    /**
+     * Set `true` to inherit the styles from parent Text component instead of using default values
+     */
+    inherit?: boolean;
+    variant?: keyof TextVariants;
+  };
 
-const Text = React.forwardRef<RNText, TextProps>(
-  (
-    {
-      asChild = false,
-      color,
-      colorStep,
-      disabled,
-      fontFamily,
-      fontSize,
-      highContrast = false,
-      textAlign = 'auto',
-      style,
-      inherit = false,
-      variant,
-      ...restProps
-    },
-    forwardedRef,
-  ) => {
-    const { styles } = useStyles(stylesheet);
+const defaultColor: Color = 'neutral';
+const defaultVariant: keyof TextVariants = 'bodyMd';
 
-    const Comp = asChild ? Slot : RNText;
+const Text = genericForwardRef(function Text<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof RNText>>,
+>(
+  {
+    as,
+    color,
+    colorStep,
+    variant,
+    highContrast = false,
+    fontFamily,
+    fontSize,
+    textAlign = 'auto',
+    disabled,
+    inherit = false,
+    style,
+    ...restProps
+  }: TextProps<T>,
+  ref: React.ForwardedRef<T>,
+) {
+  const { styles } = useStyles(stylesheet);
 
-    return (
-      <Comp
-        ref={forwardedRef}
-        disabled={disabled}
-        style={[
-          inherit && !color
-            ? null
-            : styles.color(color || 'neutral', highContrast, colorStep),
-          inherit && !variant ? null : styles.variant(variant || 'bodyMd'),
-          fontSize && styles.fontSize(fontSize),
-          fontFamily && styles.fontFamily(fontFamily),
-          textAlign && styles.textAlign(textAlign),
-          disabled && styles.disabled,
-          style,
-        ]}
-        {...restProps}
-      />
-    );
-  },
-);
+  const Comp = as || RNText;
 
-Text.displayName = 'Text';
+  return (
+    <Comp
+      ref={ref}
+      disabled={disabled}
+      style={[
+        inherit && !color
+          ? null
+          : styles.color(color || defaultColor, highContrast, colorStep),
+        inherit && !variant ? null : styles.variant(variant || defaultVariant),
+        fontSize && styles.fontSize(fontSize),
+        fontFamily && styles.fontFamily(fontFamily),
+        textAlign && styles.textAlign(textAlign),
+        disabled && styles.disabled,
+        style,
+      ]}
+      {...restProps}
+    />
+  );
+});
 
 const stylesheet = createStyleSheet((theme) => ({
   color: (color: Color, highContrast: boolean, colorStep?: ColorStep) => ({

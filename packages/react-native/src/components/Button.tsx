@@ -1,23 +1,19 @@
-import React from 'react';
-import {
-  Pressable,
-  PressableProps,
-  PressableStateCallbackType,
-} from 'react-native';
+import * as React from 'react';
+import { Pressable, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Icon, IconProps } from './Icon';
 import { Text, TextProps } from './Text';
-import { Slot } from '@/utils/slot';
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 
 type ButtonColor = Color;
 type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';
-type ButtonVariant = 'solid' | 'soft' | 'outline' | 'ghost' | 'text';
+type ButtonVariant = 'solid' | 'soft' | 'outline' | 'ghost' | 'plain';
 
 type ButtonContextValue = {
   color: ButtonColor;
-  colorStep: ColorStep;
   size: ButtonSize;
   variant: ButtonVariant;
   highContrast: boolean;
@@ -27,6 +23,8 @@ type ButtonContextValue = {
 
 const ButtonContext = React.createContext<ButtonContextValue | null>(null);
 
+ButtonContext.displayName = 'ButtonContext';
+
 const useButton = () => {
   const ctx = React.useContext(ButtonContext);
   if (!ctx) {
@@ -35,90 +33,75 @@ const useButton = () => {
   return ctx;
 };
 
-type ButtonProps = PressableProps & {
-  asChild?: boolean;
-  color?: ButtonColor;
-  size?: ButtonSize;
-  variant?: ButtonVariant;
-  highContrast?: boolean;
-  fill?: boolean;
-  iconOnly?: boolean;
-};
+type ButtonProps<T extends React.ElementType = typeof Pressable> =
+  PolymorphicProps<T> & {
+    color?: ButtonColor;
+    size?: ButtonSize;
+    variant?: ButtonVariant;
+    highContrast?: boolean;
+    fill?: boolean;
+    iconOnly?: boolean;
+  };
 
-const Button = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  ButtonProps
+const Button = genericForwardRef(function Button<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Pressable>>,
 >(
-  (
-    {
-      asChild = false,
-      accessibilityState,
-      color = 'primary',
-      size = 'md',
-      variant = 'solid',
-      disabled: disabledProp,
-      fill = false,
-      highContrast = false,
-      iconOnly = false,
-      style: styleProp,
-      ...restProps
-    }: ButtonProps,
-    forwardedRef,
-  ) => {
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-      fill,
-    });
+  {
+    as,
+    accessibilityState,
+    color = 'primary',
+    size = 'md',
+    variant = 'solid',
+    disabled: disabledProp,
+    fill = false,
+    highContrast = false,
+    iconOnly = false,
+    style: styleProp,
+    ...restProps
+  }: ButtonProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+    fill,
+  });
 
-    const disabled = disabledProp ?? false;
-    const colorStep: ColorStep =
-      variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
+  const disabled = disabledProp ?? false;
 
-    const style = React.useCallback(
-      (state: PressableStateCallbackType): any => {
-        return [
+  const Comp = as || Pressable;
+
+  return (
+    <ButtonContext.Provider
+      value={{
+        color,
+        size,
+        variant,
+        highContrast,
+        disabled,
+        iconOnly,
+      }}
+    >
+      <Comp
+        ref={ref}
+        accessibilityRole="button"
+        accessibilityState={{
+          disabled,
+          ...accessibilityState,
+        }}
+        disabled={disabled}
+        style={(state) => [
           styles.button(color, state.pressed, iconOnly),
           disabled && styles.disabledButton,
           typeof styleProp === 'function' ? styleProp(state) : styleProp,
-        ];
-      },
-      [color, disabled, iconOnly, styles, styleProp],
-    );
+        ]}
+        {...restProps}
+      />
+    </ButtonContext.Provider>
+  );
+});
 
-    const Comp = asChild ? Slot : Pressable;
-
-    return (
-      <ButtonContext.Provider
-        value={{
-          color,
-          colorStep,
-          size,
-          variant,
-          highContrast,
-          disabled,
-          iconOnly,
-        }}
-      >
-        <Comp
-          ref={forwardedRef}
-          accessibilityRole="button"
-          accessibilityState={{
-            ...accessibilityState,
-            disabled,
-          }}
-          disabled={disabled}
-          style={style}
-          {...restProps}
-        />
-      </ButtonContext.Provider>
-    );
-  },
-);
-
-Button.displayName = 'Button';
-
-const buttonTextVariantMap: Record<
+const textVariantMap: Record<
   NonNullable<ButtonProps['size']>,
   TextProps['variant']
 > = {
@@ -128,27 +111,28 @@ const buttonTextVariantMap: Record<
   lg: 'labelLg',
 };
 
-type ButtonTextProps = TextProps;
+type ButtonTextProps<T extends React.ElementType = typeof Text> = TextProps<T>;
 
-const ButtonText = React.forwardRef<
-  React.ElementRef<typeof Text>,
-  ButtonTextProps
->((props: ButtonTextProps, forwardedRef) => {
-  const { color, colorStep, size, highContrast, disabled } = useButton();
+const ButtonText = genericForwardRef(function ButtonText<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Text>>,
+>(props: ButtonTextProps<T>, ref: React.ForwardedRef<T>) {
+  const { color, size, variant, highContrast, disabled } = useButton();
+
+  const colorStep: ColorStep =
+    variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
+
   return (
     <Text
-      ref={forwardedRef}
+      ref={ref}
       color={color}
       colorStep={colorStep}
-      variant={buttonTextVariantMap[size]}
+      variant={textVariantMap[size]}
       highContrast={highContrast}
       disabled={disabled}
       {...props}
     />
   );
 });
-
-ButtonText.displayName = 'ButtonText';
 
 const iconSizeMap: Record<
   NonNullable<ButtonProps['size']>,
@@ -174,12 +158,16 @@ type ButtonIconProps = IconProps;
 const ButtonIcon = React.forwardRef<
   React.ElementRef<typeof Icon>,
   ButtonIconProps
->((props: ButtonIconProps, forwardedRef) => {
-  const { color, colorStep, size, highContrast, disabled, iconOnly } =
+>(function ButtonIcon(props: ButtonIconProps, ref) {
+  const { color, size, variant, highContrast, disabled, iconOnly } =
     useButton();
+
+  const colorStep: ColorStep =
+    variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
+
   return (
     <Icon
-      ref={forwardedRef}
+      ref={ref}
       color={color}
       colorStep={colorStep}
       size={iconOnly ? iconOnlySizeMap[size] : iconSizeMap[size]}
@@ -189,8 +177,6 @@ const ButtonIcon = React.forwardRef<
     />
   );
 });
-
-ButtonIcon.displayName = 'ButtonIcon';
 
 const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
   button: (color: Color, pressed: boolean, iconOnly: boolean) => ({
@@ -241,7 +227,7 @@ const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
         ghost: {
           backgroundColor: pressed ? colors[`${color}3`] : colors.transparent,
         },
-        text: {
+        plain: {
           opacity: pressed ? 0.5 : 1,
           backgroundColor: colors.transparent,
         },
@@ -272,7 +258,7 @@ const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
         ghost: {
           backgroundColor: colors.transparent,
         },
-        text: {
+        plain: {
           backgroundColor: colors.transparent,
         },
       },

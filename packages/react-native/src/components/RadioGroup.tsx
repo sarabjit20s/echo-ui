@@ -1,16 +1,11 @@
-import React from 'react';
-import {
-  GestureResponderEvent,
-  Pressable,
-  PressableProps,
-  View,
-  ViewProps,
-} from 'react-native';
+import * as React from 'react';
+import { GestureResponderEvent, Pressable, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Slot } from '@/utils/slot';
 import { useControllableState } from '@/hooks/useControllableState';
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 
 type RadioGroupColor = Color;
 type RadioGroupSize = 'sm' | 'md' | 'lg';
@@ -38,68 +33,59 @@ const useRadioGroup = () => {
   return ctx;
 };
 
-type RadioGroupProps = ViewProps & {
-  asChild?: boolean;
-  defaultValue?: string;
-  value?: string;
-  onValueChange?: (value: string) => void;
-  disabled?: boolean;
-  color?: RadioGroupColor;
-  size?: RadioGroupSize;
-  variant?: RadioGroupVariant;
-  highContrast?: boolean;
-};
+type RadioGroupProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    defaultValue?: string;
+    value?: string;
+    onValueChange?: (value: string) => void;
+    disabled?: boolean;
+    color?: RadioGroupColor;
+    size?: RadioGroupSize;
+    variant?: RadioGroupVariant;
+    highContrast?: boolean;
+  };
 
-const RadioGroup = React.forwardRef<
-  React.ElementRef<typeof View>,
-  RadioGroupProps
+const RadioGroup = genericForwardRef(function RadioGroup<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
 >(
-  (
-    {
-      asChild = false,
-      defaultValue,
-      value: valueProp,
-      onValueChange: onValueChangeProp,
-      disabled,
-      color = 'primary',
-      size = 'md',
-      variant = 'solid',
-      highContrast = false,
-      ...restProps
-    }: RadioGroupProps,
-    forwardedRef,
-  ) => {
-    const [value, onValueChange] = useControllableState({
-      defaultValue: defaultValue ?? '',
-      controlledValue: valueProp,
-      onControlledChange: onValueChangeProp,
-    });
+  {
+    as,
+    defaultValue,
+    value: valueProp,
+    onValueChange: onValueChangeProp,
+    disabled,
+    color = 'primary',
+    size = 'md',
+    variant = 'solid',
+    highContrast = false,
+    ...restProps
+  }: RadioGroupProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const [value, onValueChange] = useControllableState({
+    defaultValue: defaultValue ?? '',
+    controlledValue: valueProp,
+    onControlledChange: onValueChangeProp,
+  });
 
-    const Comp = asChild ? Slot : View;
+  const Comp = as || View;
 
-    return (
-      <RadioGroupContext.Provider
-        value={{
-          color,
-          disabled,
-          onValueChange,
-          size,
-          value,
-          variant,
-          highContrast,
-        }}
-      >
-        <Comp
-          ref={forwardedRef}
-          accessibilityRole="radiogroup"
-          {...restProps}
-        />
-      </RadioGroupContext.Provider>
-    );
-  },
-);
-
-RadioGroup.displayName = 'RadioGroup';
+  return (
+    <RadioGroupContext.Provider
+      value={{
+        color,
+        disabled,
+        onValueChange,
+        size,
+        value,
+        variant,
+        highContrast,
+      }}
+    >
+      <Comp ref={ref} accessibilityRole="radiogroup" {...restProps} />
+    </RadioGroupContext.Provider>
+  );
+});
 
 type RadioGroupItemContextValue = {
   checked: boolean;
@@ -110,124 +96,113 @@ const RadioGroupItemContext =
   React.createContext<RadioGroupItemContextValue | null>(null);
 
 const useRadioGroupItem = () => {
-  const ctx = React.useContext(RadioGroupItemContext);
-  if (!ctx) {
+  const context = React.useContext(RadioGroupItemContext);
+  if (!context) {
     throw new Error(
       'useRadioGroupItem must be used within a <RadioGroupItem />',
     );
   }
-  return ctx;
+  return context;
 };
 
-type RadioGroupItemProps = PressableProps & {
-  asChild?: boolean;
-  value: string;
-};
+type RadioGroupItemProps<T extends React.ElementType = typeof Pressable> =
+  PolymorphicProps<T> & {
+    value: string;
+  };
 
-const RadioGroupItem = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  RadioGroupItemProps
+const RadioGroupItem = genericForwardRef(function RadioGroupItem<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Pressable>>,
 >(
-  (
-    {
-      asChild = false,
-      accessibilityState,
-      value,
-      disabled: disabledProp,
-      onPress: onPressProp,
-      ...restProps
-    }: RadioGroupItemProps,
-    forwardedRef,
-  ) => {
-    const ctx = useRadioGroup();
+  {
+    as,
+    accessibilityState,
+    value,
+    disabled: disabledProp,
+    onPress: onPressProp,
+    ...restProps
+  }: RadioGroupItemProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const ctx = useRadioGroup();
 
-    const checked = ctx.value === value;
-    const disabled = disabledProp ?? ctx?.disabled;
+  const checked = ctx.value === value;
+  const disabled = disabledProp ?? ctx?.disabled;
 
-    const onPress = React.useCallback(
-      (e: GestureResponderEvent) => {
-        ctx?.onValueChange?.(value);
-        onPressProp?.(e);
-      },
-      [ctx, onPressProp, value],
-    );
+  const onPress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      ctx?.onValueChange?.(value);
+      onPressProp?.(e);
+    },
+    [ctx, onPressProp, value],
+  );
 
-    const Comp = asChild ? Slot : Pressable;
+  const Comp = as || Pressable;
 
-    return (
-      <RadioGroupItemContext.Provider value={{ checked, disabled: !!disabled }}>
-        <Comp
-          ref={forwardedRef}
-          accessibilityRole="radio"
-          accessibilityState={{ checked, disabled }}
-          disabled={disabled}
-          onPress={onPress}
-          {...restProps}
-        />
-      </RadioGroupItemContext.Provider>
-    );
-  },
-);
-
-RadioGroupItem.displayName = 'RadioGroupItem';
-
-type RadioGroupIndicatorProps = ViewProps & {
-  asChild?: boolean;
-};
-
-const RadioGroupIndicator = React.forwardRef<
-  React.ElementRef<typeof View>,
-  RadioGroupIndicatorProps
->(
-  (
-    {
-      asChild = false,
-      children: childrenProp,
-      style,
-      ...restProps
-    }: RadioGroupIndicatorProps,
-    forwardedRef,
-  ) => {
-    const { color, size, variant, highContrast } = useRadioGroup();
-    const { checked, disabled } = useRadioGroupItem();
-
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
-
-    const colorStep: ColorStep =
-      variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
-
-    const children = childrenProp ?? (
-      // default indicator
-      <View
-        style={[
-          styles.innerCircle(color, colorStep),
-          disabled && styles.innerCircleDisabled,
-        ]}
-      />
-    );
-
-    const Comp = asChild ? Slot : View;
-
-    return (
+  return (
+    <RadioGroupItemContext.Provider value={{ checked, disabled: !!disabled }}>
       <Comp
-        ref={forwardedRef}
-        style={[
-          styles.outerCircle(checked, color),
-          disabled && styles.outerCircleDisabled,
-          style,
-        ]}
+        ref={ref}
+        accessibilityRole="radio"
+        accessibilityState={{ checked, disabled }}
+        disabled={disabled}
+        onPress={onPress}
         {...restProps}
-      >
-        {checked && children}
-      </Comp>
-    );
-  },
-);
+      />
+    </RadioGroupItemContext.Provider>
+  );
+});
 
-RadioGroupIndicator.displayName = 'RadioGroupIndicator';
+type RadioGroupIndicatorProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T>;
+
+const RadioGroupIndicator = genericForwardRef(function RadioGroupIndicator<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  {
+    as,
+    children: childrenProp,
+    style,
+    ...restProps
+  }: RadioGroupIndicatorProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { color, size, variant, highContrast } = useRadioGroup();
+  const { checked, disabled } = useRadioGroupItem();
+
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
+
+  const colorStep: ColorStep =
+    variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
+
+  const children = childrenProp ?? (
+    // default indicator
+    <View
+      style={[
+        styles.innerCircle(color, colorStep),
+        disabled && styles.innerCircleDisabled,
+      ]}
+    />
+  );
+
+  const Comp = as || View;
+
+  return (
+    <Comp
+      ref={ref}
+      style={[
+        styles.outerCircle(checked, color),
+        disabled && styles.outerCircleDisabled,
+        style,
+      ]}
+      {...restProps}
+    >
+      {checked && children}
+    </Comp>
+  );
+});
 
 const stylesheet = createStyleSheet(({ colors, radius }) => ({
   outerCircle: (checked: boolean, color: Color) => ({

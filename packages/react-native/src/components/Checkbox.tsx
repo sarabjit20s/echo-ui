@@ -1,24 +1,23 @@
-import React from 'react';
-import {
-  GestureResponderEvent,
-  Pressable,
-  PressableProps,
-  View,
-  ViewProps,
-} from 'react-native';
+import * as React from 'react';
+import { GestureResponderEvent, Pressable, View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Icon, IconProps } from './Icon';
-import { Slot } from '@/utils/slot';
 import { useControllableState } from '@/hooks/useControllableState';
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
+
+type CheckboxColor = Color;
+type CheckboxSize = 'sm' | 'md' | 'lg';
+type CheckboxVariant = 'solid' | 'soft' | 'outline' | 'ghost';
 
 type CheckboxContextValue = {
   checked: boolean;
   disabled: boolean;
-  color: Color;
-  size: 'sm' | 'md' | 'lg';
-  variant: 'solid' | 'soft' | 'outline' | 'ghost';
+  color: CheckboxColor;
+  size: CheckboxSize;
+  variant: CheckboxVariant;
   highContrast: boolean;
 };
 
@@ -32,145 +31,135 @@ const useCheckbox = () => {
   return ctx;
 };
 
-type CheckboxProps = PressableProps & {
-  asChild?: boolean;
-  checked?: boolean;
-  defaultChecked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
-  color?: Color;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'solid' | 'soft' | 'outline' | 'ghost';
-  highContrast?: boolean;
-};
+type CheckboxProps<T extends React.ElementType = typeof Pressable> =
+  PolymorphicProps<T> & {
+    checked?: boolean;
+    defaultChecked?: boolean;
+    onCheckedChange?: (checked: boolean) => void;
+    color?: CheckboxColor;
+    size?: CheckboxSize;
+    variant?: CheckboxVariant;
+    highContrast?: boolean;
+  };
 
-const Checkbox = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  CheckboxProps
+const Checkbox = genericForwardRef(function Checkbox<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Pressable>>,
 >(
-  (
-    {
-      asChild = false,
-      accessibilityState,
-      checked: checkedProp,
-      defaultChecked,
-      onCheckedChange,
-      onPress: onPressProp,
-      disabled,
-      color = 'primary',
-      size = 'md',
-      variant = 'solid',
-      highContrast = false,
-      ...restProps
-    }: CheckboxProps,
-    forwardedRef,
-  ) => {
-    const [checked, setChecked] = useControllableState({
-      defaultValue: defaultChecked ?? false,
-      controlledValue: checkedProp,
-      onControlledChange: onCheckedChange,
-    });
+  {
+    as,
+    accessibilityState,
+    checked: checkedProp,
+    defaultChecked,
+    onCheckedChange,
+    onPress: onPressProp,
+    disabled,
+    color = 'primary',
+    size = 'md',
+    variant = 'solid',
+    highContrast = false,
+    ...restProps
+  }: CheckboxProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const [checked, setChecked] = useControllableState({
+    defaultValue: defaultChecked ?? false,
+    controlledValue: checkedProp,
+    onControlledChange: onCheckedChange,
+  });
 
-    const onPress = React.useCallback(
-      (e: GestureResponderEvent) => {
-        setChecked((prev) => !prev);
-        onPressProp?.(e);
-      },
-      [onPressProp, setChecked],
-    );
+  const onPress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      setChecked((prev) => !prev);
+      onPressProp?.(e);
+    },
+    [onPressProp, setChecked],
+  );
 
-    const Comp = asChild ? Slot : Pressable;
+  const Comp = as || Pressable;
 
-    return (
-      <CheckboxContext.Provider
-        value={{
+  return (
+    <CheckboxContext.Provider
+      value={{
+        checked,
+        disabled: !!disabled,
+        color,
+        size,
+        variant,
+        highContrast,
+      }}
+    >
+      <Comp
+        ref={ref}
+        accessibilityRole="checkbox"
+        accessibilityState={{
+          ...accessibilityState,
           checked,
           disabled: !!disabled,
-          color,
-          size,
-          variant,
-          highContrast,
         }}
-      >
-        <Comp
-          ref={forwardedRef}
-          accessibilityRole="checkbox"
-          accessibilityState={{
-            ...accessibilityState,
-            checked,
-            disabled: !!disabled,
-          }}
-          disabled={disabled}
-          onPress={onPress}
-          {...restProps}
-        />
-      </CheckboxContext.Provider>
-    );
-  },
-);
-
-Checkbox.displayName = 'Checkbox';
-
-type CheckboxIndicatorProps = ViewProps & {
-  asChild?: boolean;
-};
-
-const CheckboxIndicator = React.forwardRef<
-  React.ElementRef<typeof View>,
-  ViewProps
->(
-  (
-    {
-      asChild = false,
-      children: childrenProp,
-      style,
-      ...restProps
-    }: CheckboxIndicatorProps,
-    forwardedRef,
-  ) => {
-    const { checked, disabled, color, size, variant } = useCheckbox();
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
-
-    const children = childrenProp ?? (
-      // default icon
-      <CheckboxIcon name="checkmark-sharp" />
-    );
-
-    const Comp = asChild ? Slot : View;
-
-    return (
-      <Comp
-        ref={forwardedRef}
-        style={[
-          styles.checkboxIndicator(checked, color),
-          disabled && styles.checkboxIndicatorDisabled,
-          style,
-        ]}
+        disabled={disabled}
+        onPress={onPress}
         {...restProps}
-      >
-        {checked && children}
-      </Comp>
-    );
-  },
-);
+      />
+    </CheckboxContext.Provider>
+  );
+});
 
-CheckboxIndicator.displayName = 'CheckboxIndicator';
+type CheckboxIndicatorProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T>;
+
+const CheckboxIndicator = genericForwardRef(function CheckboxIndicator<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  {
+    as,
+    children: childrenProp,
+    style: styleProp,
+    ...restProps
+  }: CheckboxIndicatorProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { checked, disabled, color, size, variant } = useCheckbox();
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
+
+  const children = childrenProp ?? (
+    // default icon
+    <CheckboxIcon name="checkmark-sharp" />
+  );
+
+  const Comp = as || View;
+
+  return (
+    <Comp
+      ref={ref}
+      style={[
+        styles.checkboxIndicator(checked, color),
+        disabled && styles.checkboxIndicatorDisabled,
+        styleProp,
+      ]}
+      {...restProps}
+    >
+      {checked && children}
+    </Comp>
+  );
+});
 
 type CheckboxIconProps = IconProps;
 
 const CheckboxIcon = React.forwardRef<
   React.ElementRef<typeof Icon>,
   CheckboxIconProps
->((props: CheckboxIconProps, forwardedRef) => {
+>(function CheckboxIcon(props: CheckboxIconProps, ref) {
   const { disabled, color, size, variant, highContrast } = useCheckbox();
+
   const colorStep: ColorStep =
     variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
 
   return (
     <Icon
-      ref={forwardedRef}
+      ref={ref}
       size={size}
       color={color}
       colorStep={colorStep}
@@ -181,12 +170,11 @@ const CheckboxIcon = React.forwardRef<
   );
 });
 
-CheckboxIcon.displayName = 'CheckboxIcon';
-
 const stylesheet = createStyleSheet(({ colors, radius }) => ({
   checkboxIndicator: (checked: boolean, color: Color) => ({
     justifyContent: 'center',
     alignItems: 'center',
+    borderCurve: 'continuous',
     borderRadius: radius.xs,
     variants: {
       size: {
@@ -204,7 +192,11 @@ const stylesheet = createStyleSheet(({ colors, radius }) => ({
         },
       },
       variant: {
-        ghost: {},
+        solid: {
+          borderWidth: 1,
+          borderColor: checked ? colors[`${color}9`] : colors.neutral7,
+          backgroundColor: checked ? colors[`${color}9`] : colors.transparent,
+        },
         outline: {
           borderWidth: 1,
           borderColor: colors[`${color}7`],
@@ -213,11 +205,7 @@ const stylesheet = createStyleSheet(({ colors, radius }) => ({
         soft: {
           backgroundColor: colors[`${color}4`],
         },
-        solid: {
-          borderWidth: 1,
-          borderColor: checked ? colors[`${color}9`] : colors.neutral7,
-          backgroundColor: checked ? colors[`${color}9`] : colors.transparent,
-        },
+        ghost: {},
       },
     },
   }),
@@ -227,6 +215,12 @@ const stylesheet = createStyleSheet(({ colors, radius }) => ({
     variants: {
       variant: {
         solid: {
+          borderWidth: 0,
+        },
+        outline: {
+          borderWidth: 1,
+        },
+        soft: {
           borderWidth: 0,
         },
         ghost: {

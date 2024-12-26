@@ -1,34 +1,33 @@
-import React from 'react';
+import * as React from 'react';
 import {
   Image,
   ImageErrorEventData,
   ImageLoadEventData,
-  ImageProps,
   NativeSyntheticEvent,
   View,
-  ViewProps,
 } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Slot } from '@/utils/slot';
-import { Color } from '@/styles/tokens/colors';
+import { Text, TextProps } from './Text';
+import { Icon, IconProps } from './Icon';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 
-type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 type AvatarColor = Color;
 type AvatarVariant = 'soft' | 'solid';
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+type ImageLoadingStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
-type AvatarContextProps = {
+type AvatarContextValue = {
   color: AvatarColor;
   variant: AvatarVariant;
   size: AvatarSize;
   imageLoadingStatus: ImageLoadingStatus;
-  setImageLoadingStatus: React.Dispatch<
-    React.SetStateAction<ImageLoadingStatus>
-  >;
+  onLoadingStatusChange: (status: ImageLoadingStatus) => void;
 };
 
-const AvatarContext = React.createContext<AvatarContextProps | null>(null);
+const AvatarContext = React.createContext<AvatarContextValue | null>(null);
 
 const useAvatar = () => {
   const ctx = React.useContext(AvatarContext);
@@ -38,139 +37,221 @@ const useAvatar = () => {
   return ctx;
 };
 
-type AvatarProps = ViewProps & {
-  asChild?: boolean;
-  children: React.ReactNode;
-  color?: AvatarColor;
-  variant?: AvatarVariant;
-  size?: AvatarSize;
-};
+type AvatarProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    color?: AvatarColor;
+    variant?: AvatarVariant;
+    size?: AvatarSize;
+  };
 
-const Avatar = React.forwardRef<React.ElementRef<typeof View>, AvatarProps>(
-  (
-    {
-      asChild = false,
-      color = 'primary',
-      size = 'md',
-      variant = 'soft',
-      style,
-      ...restProps
-    }: AvatarProps,
-    forwardedRef,
-  ) => {
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
-    const [imageLoadingStatus, setImageLoadingStatus] =
-      React.useState<ImageLoadingStatus>('idle');
-
-    const Comp = asChild ? Slot : View;
-    return (
-      <AvatarContext.Provider
-        value={{
-          color,
-          variant,
-          size,
-          imageLoadingStatus,
-          setImageLoadingStatus,
-        }}
-      >
-        <Comp ref={forwardedRef} style={[styles.image, style]} {...restProps} />
-      </AvatarContext.Provider>
-    );
-  },
-);
-
-Avatar.displayName = 'Avatar';
-
-type AvatarImageProps = ImageProps & {
-  asChild?: boolean;
-};
-
-const AvatarImage = React.forwardRef<
-  React.ElementRef<typeof Image>,
-  AvatarImageProps
+const Avatar = genericForwardRef(function Avatar<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
 >(
-  (
-    {
-      asChild = false,
-      onError: onErrorProp,
-      onLoad: onLoadProp,
-      onLoadStart: onLoadStartProp,
-      style,
-      ...restProps
-    }: AvatarImageProps,
-    forwardedRef,
-  ) => {
-    const { setImageLoadingStatus, size, variant } = useAvatar();
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
+  {
+    as,
+    color = 'primary',
+    size = 'md',
+    variant = 'soft',
+    style,
+    ...restProps
+  }: AvatarProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const [imageLoadingStatus, setImageLoadingStatus] =
+    React.useState<ImageLoadingStatus>('idle');
 
-    function onLoadStart() {
-      setImageLoadingStatus('loading');
-      onLoadStartProp?.();
-    }
-    function onLoad(e: NativeSyntheticEvent<ImageLoadEventData>) {
-      setImageLoadingStatus('loaded');
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
+
+  const onLoadingStatusChange = React.useCallback(
+    (status: ImageLoadingStatus) => {
+      setImageLoadingStatus(status);
+    },
+    [],
+  );
+
+  const Comp = as || View;
+
+  return (
+    <AvatarContext.Provider
+      value={{
+        color,
+        variant,
+        size,
+        imageLoadingStatus,
+        onLoadingStatusChange,
+      }}
+    >
+      <Comp ref={ref} style={[styles.image, style]} {...restProps} />
+    </AvatarContext.Provider>
+  );
+});
+
+type AvatarImageProps<T extends React.ElementType = typeof Image> =
+  PolymorphicProps<T>;
+
+const AvatarImage = genericForwardRef(function AvatarImage<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Image>>,
+>(
+  {
+    as,
+    onError: onErrorProp,
+    onLoad: onLoadProp,
+    onLoadStart: onLoadStartProp,
+    style,
+    ...restProps
+  }: AvatarImageProps<T>,
+  ref: React.ForwardedRef<Image>,
+) {
+  const { onLoadingStatusChange, size, variant } = useAvatar();
+
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
+
+  React.useEffect(() => {
+    return () => {
+      onLoadingStatusChange('idle');
+    };
+  }, [onLoadingStatusChange]);
+
+  const onLoadStart = React.useCallback(() => {
+    onLoadingStatusChange('loading');
+    onLoadStartProp?.();
+  }, [onLoadStartProp, onLoadingStatusChange]);
+
+  const onLoad = React.useCallback(
+    (e: NativeSyntheticEvent<ImageLoadEventData>) => {
+      onLoadingStatusChange('loaded');
       onLoadProp?.(e);
-    }
-    function onError(e: NativeSyntheticEvent<ImageErrorEventData>) {
-      setImageLoadingStatus('error');
+    },
+    [onLoadProp, onLoadingStatusChange],
+  );
+
+  const onError = React.useCallback(
+    (e: NativeSyntheticEvent<ImageErrorEventData>) => {
+      onLoadingStatusChange('error');
       onErrorProp?.(e);
+    },
+    [onErrorProp, onLoadingStatusChange],
+  );
+
+  const Comp = as || Image;
+
+  return (
+    <Comp
+      ref={ref}
+      onError={onError}
+      onLoad={onLoad}
+      onLoadStart={onLoadStart}
+      style={[styles.image, style]}
+      {...restProps}
+    />
+  );
+});
+
+type AvatarFallbackProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    delayMs?: number;
+  };
+
+const AvatarFallback = genericForwardRef(function AvatarFallback<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  { as, delayMs, style, ...restProps }: AvatarFallbackProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { imageLoadingStatus, color, size, variant } = useAvatar();
+
+  const [canRender, setCanRender] = React.useState(delayMs === undefined);
+
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
+
+  React.useEffect(() => {
+    let timerId: ReturnType<typeof setTimeout>;
+    if (delayMs !== undefined) {
+      timerId = setTimeout(() => setCanRender(true), delayMs);
     }
+    return () => clearTimeout(timerId);
+  }, [delayMs]);
 
-    const Comp = asChild ? Slot : Image;
+  const Comp = as || View;
 
-    return (
-      <Comp
-        ref={forwardedRef}
-        onError={onError}
-        onLoad={onLoad}
-        onLoadStart={onLoadStart}
-        style={[styles.image, style]}
-        {...restProps}
-      />
-    );
-  },
-);
+  return canRender && imageLoadingStatus !== 'loaded' ? (
+    <Comp
+      ref={ref}
+      style={[styles.image, styles.fallback(color), style]}
+      {...restProps}
+    />
+  ) : null;
+});
 
-AvatarImage.displayName = 'AvatarImage';
-
-type AvatarFallbackProps = ViewProps & {
-  asChild?: boolean;
+const textVariantsMap: Record<AvatarSize, TextProps['variant']> = {
+  xs: 'labelXs',
+  sm: 'labelSm',
+  md: 'labelSm',
+  lg: 'headingXs',
+  xl: 'headingSm',
+  '2xl': 'headingMd',
 };
 
-const AvatarFallback = React.forwardRef<
-  React.ElementRef<typeof View>,
-  AvatarFallbackProps
->(
-  (
-    { asChild = false, style, ...restProps }: AvatarFallbackProps,
-    forwardedRef,
-  ) => {
-    const { imageLoadingStatus, color, size, variant } = useAvatar();
+type AvatarTextProps<T extends React.ElementType = typeof Text> = TextProps<T>;
 
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
+const AvatarText = genericForwardRef(function AvatarText<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Text>>,
+>(props: AvatarTextProps<T>, ref: React.ForwardedRef<T>) {
+  const { color, size, variant } = useAvatar();
 
-    const Comp = asChild ? Slot : View;
+  const colorStep: ColorStep = variant === 'solid' ? 'Contrast' : '11';
 
-    return imageLoadingStatus !== 'loaded' ? (
-      <Comp
-        ref={forwardedRef}
-        style={[styles.image, styles.fallback(color), style]}
-        {...restProps}
-      />
-    ) : null;
-  },
-);
+  return (
+    <Text
+      ref={ref}
+      color={color}
+      colorStep={colorStep}
+      variant={textVariantsMap[size]}
+      {...props}
+    />
+  );
+});
 
-AvatarFallback.displayName = 'AvatarFallback';
+const iconSizeMap: Record<AvatarSize, IconProps['size']> = {
+  xs: 'xs',
+  sm: 'sm',
+  md: 'md',
+  lg: 'xl',
+  xl: '3xl',
+  '2xl': '5xl',
+};
+
+type AvatarIconProps = IconProps;
+
+const AvatarIcon = React.forwardRef<
+  React.ElementRef<typeof Icon>,
+  AvatarIconProps
+>((props: AvatarIconProps, forwardedRef) => {
+  const { color, size, variant } = useAvatar();
+
+  const colorStep: ColorStep = variant === 'solid' ? 'Contrast' : '11';
+
+  return (
+    <Icon
+      ref={forwardedRef}
+      color={color}
+      colorStep={colorStep}
+      size={iconSizeMap[size]}
+      {...props}
+    />
+  );
+});
+
+AvatarIcon.displayName = 'AvatarIcon';
 
 const stylesheet = createStyleSheet(({ colors, radius }) => ({
   image: {
@@ -223,5 +304,18 @@ const stylesheet = createStyleSheet(({ colors, radius }) => ({
   }),
 }));
 
-export { Avatar, AvatarImage, AvatarFallback, useAvatar };
-export type { AvatarProps, AvatarImageProps, AvatarFallbackProps };
+export {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+  AvatarText,
+  AvatarIcon,
+  useAvatar,
+};
+export type {
+  AvatarProps,
+  AvatarImageProps,
+  AvatarFallbackProps,
+  AvatarTextProps,
+  AvatarIconProps,
+};

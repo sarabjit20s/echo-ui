@@ -1,17 +1,18 @@
-import React from 'react';
+import * as React from 'react';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import Ionicons from '@react-native-vector-icons/ionicons';
 
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 
 type IconProps = Omit<
-  React.ComponentProps<typeof Ionicons>,
+  React.ComponentPropsWithoutRef<typeof Ionicons>,
   'color' | 'size'
 > & {
   color?: Color;
   colorStep?: ColorStep;
   highContrast?: boolean;
   size?:
+    | '2xs'
     | 'xs'
     | 'sm'
     | 'md'
@@ -25,7 +26,7 @@ type IconProps = Omit<
 };
 
 const Icon = React.forwardRef<React.ElementRef<typeof Ionicons>, IconProps>(
-  (
+  function Icon(
     {
       name,
       color = 'neutral',
@@ -36,8 +37,8 @@ const Icon = React.forwardRef<React.ElementRef<typeof Ionicons>, IconProps>(
       style,
       ...restProps
     },
-    forwardedRef,
-  ) => {
+    ref,
+  ) {
     const { styles, theme } = useStyles(stylesheet, {
       size,
     });
@@ -50,7 +51,7 @@ const Icon = React.forwardRef<React.ElementRef<typeof Ionicons>, IconProps>(
 
     return (
       <Ionicons
-        ref={forwardedRef}
+        ref={ref}
         name={name}
         color={iconColor}
         disabled={disabled}
@@ -61,12 +62,13 @@ const Icon = React.forwardRef<React.ElementRef<typeof Ionicons>, IconProps>(
   },
 );
 
-Icon.displayName = 'Icon';
-
 const stylesheet = createStyleSheet(({ space }) => ({
   icon: {
     variants: {
       size: {
+        '2xs': {
+          fontSize: space[10],
+        },
         xs: {
           fontSize: space[12],
         },

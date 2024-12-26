@@ -1,15 +1,13 @@
-import React from 'react';
+import * as React from 'react';
 import {
   AccessibilityInfo,
   BackHandler,
   findNodeHandle,
   GestureResponderEvent,
   Pressable,
-  PressableProps,
   StyleProp,
   StyleSheet,
   View,
-  ViewProps,
   ViewStyle,
 } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
@@ -23,11 +21,12 @@ import Animated, {
 
 import { Text, TextProps } from './Text';
 import { Portal, PortalProps } from '@/utils/portal';
-import { Slot } from '@/utils/slot';
 import { useComposedRefs } from '@/utils/composeRefs';
 import { useControllableState } from '@/hooks/useControllableState';
 import { useInsets } from '@/hooks/useInsets';
 import { useScreenDimensions } from '@/hooks/useScreenDimensions';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
 
 const animConfig = {
   duration: 200,
@@ -116,61 +115,53 @@ const Dialog = ({
   );
 };
 
-Dialog.displayName = 'Dialog';
+type DialogTriggerProps<T extends React.ElementType = typeof Pressable> =
+  PolymorphicProps<T>;
 
-type DialogTriggerProps = PressableProps & {
-  asChild?: boolean;
-};
-
-const DialogTrigger = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  DialogTriggerProps
+const DialogTrigger = genericForwardRef(function DialogTrigger<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Pressable>>,
 >(
-  (
-    {
-      asChild = false,
-      children,
-      accessibilityState,
-      disabled,
-      onPress: onPressProp,
-      ...restProps
+  {
+    as,
+    children,
+    accessibilityState,
+    disabled,
+    onPress: onPressProp,
+    ...restProps
+  }: DialogTriggerProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { open, onOpen, triggerRef } = useDialog();
+
+  const composedRefs = useComposedRefs(triggerRef, ref);
+
+  const onPress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      onOpen();
+      onPressProp?.(e);
     },
-    forwardedRef,
-  ) => {
-    const { open, onOpen, triggerRef } = useDialog();
+    [onPressProp, onOpen],
+  );
 
-    const composedRefs = useComposedRefs(triggerRef, forwardedRef);
+  const Comp = as || Pressable;
 
-    const onPress = React.useCallback(
-      (e: GestureResponderEvent) => {
-        onOpen();
-        onPressProp?.(e);
-      },
-      [onPressProp, onOpen],
-    );
-
-    const Comp = asChild ? Slot : Pressable;
-
-    return (
-      <Comp
-        ref={composedRefs}
-        accessibilityRole="button"
-        accessibilityState={{
-          ...accessibilityState,
-          disabled: disabled ?? accessibilityState?.disabled,
-          expanded: open,
-        }}
-        disabled={disabled}
-        onPress={onPress}
-        {...restProps}
-      >
-        {children}
-      </Comp>
-    );
-  },
-);
-
-DialogTrigger.displayName = 'DialogTrigger';
+  return (
+    <Comp
+      ref={composedRefs}
+      accessibilityRole="button"
+      accessibilityState={{
+        disabled: disabled ?? accessibilityState?.disabled,
+        expanded: open,
+        ...accessibilityState,
+      }}
+      disabled={disabled}
+      onPress={onPress}
+      {...restProps}
+    >
+      {children}
+    </Comp>
+  );
+});
 
 type DialogPortalProps = PortalProps;
 
@@ -188,16 +179,20 @@ DialogPortal.displayName = 'DialogPortal';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-type DialogOverlayProps = Omit<PressableProps, 'style'> & {
-  asChild?: boolean;
-  // callback as a style prop is not working with AnimatedPressable
+type DialogOverlayProps<T extends React.ElementType = typeof Pressable> = Omit<
+  PolymorphicProps<T>,
+  'style'
+> & {
+  // BUG: callback as a style prop is not working with AnimatedPressable
   style?: StyleProp<ViewStyle>;
 };
 
-const DialogOverlay = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  DialogOverlayProps
->(({ asChild, onPress: onPressProp, style, ...restProps }, forwardedRef) => {
+const DialogOverlay = genericForwardRef(function DialogOverlay<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Pressable>>,
+>(
+  { as, onPress: onPressProp, style, ...restProps }: DialogOverlayProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
   const { onClose, closeOnPressOutside } = useDialog();
 
   const { styles } = useStyles(stylesheet);
@@ -210,11 +205,11 @@ const DialogOverlay = React.forwardRef<
     [closeOnPressOutside, onClose, onPressProp],
   );
 
-  const Comp = asChild ? Slot : AnimatedPressable;
+  const Comp = as || AnimatedPressable;
 
   return (
     <Comp
-      ref={forwardedRef}
+      ref={ref}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       entering={FadeIn.duration(animConfig.duration)
@@ -230,112 +225,105 @@ const DialogOverlay = React.forwardRef<
   );
 });
 
-DialogOverlay.displayName = 'DialogOverlay';
+type DialogContentProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    width?: number;
+    minWidth?: number;
+    maxWidth?: number;
+    height?: number;
+    minHeight?: number;
+    maxHeight?: number;
+    containerStyle?: StyleProp<ViewStyle>;
+  };
 
-type DialogContentProps = ViewProps & {
-  asChild?: boolean;
-  width?: number;
-  minWidth?: number;
-  maxWidth?: number;
-  height?: number;
-  minHeight?: number;
-  maxHeight?: number;
-  containerStyle?: StyleProp<ViewStyle>;
-};
-
-const DialogContent = React.forwardRef<
-  React.ElementRef<typeof View>,
-  DialogContentProps
+const DialogContent = genericForwardRef(function DialogContent<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
 >(
-  (
-    {
-      children,
-      asChild,
-      width,
-      minWidth,
-      maxWidth = 600,
-      height,
-      minHeight,
-      maxHeight: maxHeightProp,
-      containerStyle: containerStyleProp,
-      style,
-      ...restProps
-    },
-    forwardedRef,
-  ) => {
-    const { titleId, onClose, closeOnBackPress } = useDialog();
+  {
+    as,
+    children,
+    width,
+    minWidth,
+    maxWidth = 600,
+    height,
+    minHeight,
+    maxHeight: maxHeightProp,
+    containerStyle: containerStyleProp,
+    style,
+    ...restProps
+  }: DialogContentProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { titleId, onClose, closeOnBackPress } = useDialog();
 
-    const { styles } = useStyles(stylesheet);
-    const { height: screenHeight } = useScreenDimensions();
-    const insets = useInsets();
-    const maxHeight =
-      maxHeightProp ?? screenHeight - insets.top - insets.bottom;
+  const { styles } = useStyles(stylesheet);
+  const { height: screenHeight } = useScreenDimensions();
+  const insets = useInsets();
+  const maxHeight = maxHeightProp ?? screenHeight - insets.top - insets.bottom;
 
-    React.useEffect(() => {
-      const listener = BackHandler.addEventListener('hardwareBackPress', () => {
-        if (closeOnBackPress) {
-          onClose();
-        }
-        return true;
-      });
-      return () => listener.remove();
-    }, [closeOnBackPress, onClose]);
+  React.useEffect(() => {
+    const listener = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (closeOnBackPress) {
+        onClose();
+      }
+      return true;
+    });
+    return () => listener.remove();
+  }, [closeOnBackPress, onClose]);
 
-    const Comp = asChild ? Slot : Animated.View;
+  const Comp = as || Animated.View;
 
-    return (
-      <View
-        pointerEvents="box-none"
-        style={[styles.contentContainerStyle, containerStyleProp]}
+  return (
+    <View
+      pointerEvents="box-none"
+      style={[styles.contentContainerStyle, containerStyleProp]}
+    >
+      <Comp
+        ref={ref}
+        accessibilityLabelledBy={titleId}
+        accessibilityViewIsModal
+        accessibilityLiveRegion="polite"
+        importantForAccessibility="yes"
+        entering={entryAnim
+          .duration(animConfig.duration)
+          .reduceMotion(animConfig.reduceMotion)}
+        exiting={exitAnim
+          .duration(animConfig.duration)
+          .reduceMotion(animConfig.reduceMotion)}
+        onAccessibilityEscape={onClose}
+        style={[
+          styles.content,
+          style,
+          {
+            width,
+            minWidth,
+            maxWidth,
+            height,
+            minHeight,
+            maxHeight,
+          },
+        ]}
+        {...restProps}
       >
-        <Comp
-          ref={forwardedRef}
-          accessibilityLabelledBy={titleId}
-          accessibilityViewIsModal
-          accessibilityLiveRegion="polite"
-          importantForAccessibility="yes"
-          entering={entryAnim
-            .duration(animConfig.duration)
-            .reduceMotion(animConfig.reduceMotion)}
-          exiting={exitAnim
-            .duration(animConfig.duration)
-            .reduceMotion(animConfig.reduceMotion)}
-          onAccessibilityEscape={onClose}
-          style={[
-            styles.content,
-            style,
-            {
-              width,
-              minWidth,
-              maxWidth,
-              height,
-              minHeight,
-              maxHeight,
-            },
-          ]}
-          {...restProps}
-        >
-          {children}
-        </Comp>
-      </View>
-    );
-  },
-);
+        {children}
+      </Comp>
+    </View>
+  );
+});
 
-DialogContent.displayName = 'DialogContent';
+type DialogTitleProps<T extends React.ElementType = typeof Text> = Omit<
+  TextProps<T>,
+  'nativeID'
+>;
 
-// nativeId is used for accessibility
-type DialogTitleProps = Omit<TextProps, 'nativeID'>;
-
-const DialogTitle = React.forwardRef<
-  React.ElementRef<typeof Text>,
-  DialogTitleProps
->((props, forwardedRef) => {
+const DialogTitle = genericForwardRef(function DialogTitle<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Text>>,
+>(props: DialogTitleProps<T>, ref: React.ForwardedRef<T>) {
   const { titleId } = useDialog();
 
   return (
     <Text
-      ref={forwardedRef}
+      ref={ref}
       nativeID={titleId}
       variant="headingSm"
       highContrast
@@ -344,27 +332,24 @@ const DialogTitle = React.forwardRef<
   );
 });
 
-DialogTitle.displayName = 'DialogTitle';
+type DialogDescriptionProps<T extends React.ElementType = typeof Text> =
+  TextProps<T>;
 
-type DialogDescriptionProps = TextProps;
-
-const DialogDescription = React.forwardRef<
-  React.ElementRef<typeof Text>,
-  DialogDescriptionProps
->((props, forwardedRef) => {
-  return <Text ref={forwardedRef} variant="bodyMd" {...props} />;
+const DialogDescription = genericForwardRef(function DialogDescription<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Text>>,
+>(props: DialogDescriptionProps<T>, ref: React.ForwardedRef<T>) {
+  return <Text ref={ref} variant="bodyMd" {...props} />;
 });
 
-DialogDescription.displayName = 'DialogDescription';
+type DialogCloseProps<T extends React.ElementType = typeof Pressable> =
+  PolymorphicProps<T>;
 
-type DialogCloseProps = PressableProps & {
-  asChild?: boolean;
-};
-
-const DialogClose = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  DialogCloseProps
->(({ asChild, onPress: onPressProp, ...restProps }, forwardedRef) => {
+const DialogClose = genericForwardRef(function DialogClose<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Pressable>>,
+>(
+  { as, onPress: onPressProp, ...restProps }: DialogCloseProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
   const { onClose } = useDialog();
 
   const onPress = React.useCallback(
@@ -375,18 +360,16 @@ const DialogClose = React.forwardRef<
     [onClose, onPressProp],
   );
 
-  const Comp = asChild ? Slot : Pressable;
+  const Comp = as || Pressable;
   return (
     <Comp
-      ref={forwardedRef}
+      ref={ref}
       accessibilityRole="button"
       onPress={onPress}
       {...restProps}
     />
   );
 });
-
-DialogClose.displayName = 'DialogClose';
 
 const stylesheet = createStyleSheet(({ colors, radius, space }, rt) => ({
   overlay: {
@@ -408,14 +391,14 @@ const stylesheet = createStyleSheet(({ colors, radius, space }, rt) => ({
     padding: space[20],
     borderRadius: radius.lg,
     borderCurve: 'continuous',
-    backgroundColor: colors.neutral1,
+    backgroundColor: colors.neutral2,
   },
 }));
 
 const entryAnim = new Keyframe({
   0: {
     opacity: 0,
-    transform: [{ scale: 0.9 }],
+    transform: [{ scale: 0.95 }],
   },
   100: {
     opacity: 1,
@@ -431,7 +414,7 @@ const exitAnim = new Keyframe({
   },
   100: {
     opacity: 0,
-    transform: [{ scale: 0.9 }],
+    transform: [{ scale: 0.95 }],
     easing: animConfig.easing,
   },
 });
@@ -445,6 +428,7 @@ export {
   DialogTitle,
   DialogDescription,
   DialogClose,
+  DialogContext,
   useDialog,
 };
 export type {
@@ -456,4 +440,5 @@ export type {
   DialogTitleProps,
   DialogDescriptionProps,
   DialogCloseProps,
+  DialogContextValue,
 };

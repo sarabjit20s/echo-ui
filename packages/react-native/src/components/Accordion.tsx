@@ -1,12 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import {
   GestureResponderEvent,
   LayoutChangeEvent,
   Pressable,
-  PressableProps,
-  PressableStateCallbackType,
   View,
-  ViewProps,
 } from 'react-native';
 import Animated, {
   Easing,
@@ -19,9 +16,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Slot } from '@/utils/slot';
 import { useControllableState } from '@/hooks/useControllableState';
-import { Color } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color } from '@/styles/tokens/colors';
 
 const animConfig = {
   duration: 200,
@@ -29,18 +27,19 @@ const animConfig = {
   reduceMotion: ReduceMotion.System,
 } as const;
 
-type AccordionVariant = 'soft' | 'ghost';
+type AccordionColor = Color;
+type AccordionVariant = 'soft';
 
-type AccordionContextProps = {
-  disabled?: boolean;
-  onValueChange: (value: string) => void | ((value: string[]) => void);
+type AccordionContextValue = {
   type: 'single' | 'multiple';
   value: string | string[];
-  color: Color;
+  onValueChange: (value: string | string[]) => void;
+  color: AccordionColor;
   variant: AccordionVariant;
+  disabled?: boolean;
 };
 
-const AccordionContext = React.createContext<AccordionContextProps | null>(
+const AccordionContext = React.createContext<AccordionContextValue | null>(
   null,
 );
 
@@ -52,85 +51,117 @@ const useAccordion = () => {
   return ctx;
 };
 
-type AccordionCommonProps = Omit<ViewProps, 'children'> & {
-  asChild?: boolean;
-  children: React.ReactNode;
-  disabled?: boolean;
-  color?: Color;
-  variant?: AccordionVariant;
-};
+type ItemPosition = 'first' | 'middle' | 'last' | 'single';
 
-type AccordionSingleProps = AccordionCommonProps & {
-  type?: 'single';
-  defaultValue?: string;
-  value?: string;
-  onValueChange?: (value: string) => void;
-};
+type AccordionItemPositionContextValue = ItemPosition;
 
-type AccordionMultipleProps = AccordionCommonProps & {
-  type?: 'multiple';
-  defaultValue?: string[];
-  value?: string[];
-  onValueChange?: (value: string[]) => void;
-};
+const AccordionItemPositionContext =
+  React.createContext<AccordionItemPositionContextValue | null>(null);
 
-type AccordionProps = AccordionSingleProps | AccordionMultipleProps;
-
-const Accordion = React.forwardRef<
-  React.ElementRef<typeof View>,
-  AccordionProps
->(
-  (
-    {
-      asChild = false,
-      type = 'multiple',
-      color = 'neutral',
-      variant = 'soft',
-      disabled,
-      defaultValue = [],
-      value: valueProp,
-      onValueChange: onValueChangeProp,
-      style,
-      ...restProps
-    }: AccordionProps,
-    forwardedRef,
-  ) => {
-    const { styles } = useStyles(stylesheet);
-
-    const [value, setValue] = useControllableState<string | string[]>({
-      defaultValue,
-      controlledValue: valueProp,
-      onControlledChange: onValueChangeProp as
-        | ((value: string | string[]) => void)
-        | undefined,
-    });
-
-    const Comp = asChild ? Slot : View;
-
-    return (
-      <AccordionContext.Provider
-        value={{
-          disabled,
-          onValueChange: setValue,
-          type,
-          value,
-          color,
-          variant,
-        }}
-      >
-        <Comp
-          ref={forwardedRef}
-          style={[styles.accordion, style]}
-          {...restProps}
-        />
-      </AccordionContext.Provider>
+const useAccordionItemPosition = () => {
+  const ctx = React.useContext(AccordionItemPositionContext);
+  if (!ctx) {
+    throw new Error(
+      'useAccordionItemPosition must be used within a <AccordionItem />',
     );
-  },
-);
+  }
+  return ctx;
+};
 
-Accordion.displayName = 'Accordion';
+type AccordionCommonProps<T extends React.ElementType> = PolymorphicProps<T> & {
+  color?: AccordionColor;
+  variant?: AccordionVariant;
+  disabled?: boolean;
+};
 
-type AccordionItemContextProps = {
+type AccordionSingleProps<T extends React.ElementType> =
+  AccordionCommonProps<T> & {
+    type?: 'single';
+    defaultValue?: string;
+    value?: string;
+    onValueChange?: (value: string) => void;
+  };
+
+type AccordionMultipleProps<T extends React.ElementType> =
+  AccordionCommonProps<T> & {
+    type?: 'multiple';
+    defaultValue?: string[];
+    value?: string[];
+    onValueChange?: (value: string[]) => void;
+  };
+
+type AccordionProps<T extends React.ElementType = typeof View> =
+  | AccordionSingleProps<T>
+  | AccordionMultipleProps<T>;
+
+const Accordion = genericForwardRef(function Accordion<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  {
+    as,
+    children,
+    type = 'multiple',
+    color = 'neutral',
+    variant = 'soft',
+    disabled,
+    defaultValue = [],
+    value: valueProp,
+    onValueChange: onValueChangeProp,
+    style,
+    ...restProps
+  }: AccordionProps<T>,
+  ref: React.ForwardedRef<T>,
+) {
+  const { styles } = useStyles(stylesheet);
+
+  const [value, setValue] = useControllableState<string | string[]>({
+    defaultValue,
+    controlledValue: valueProp,
+    onControlledChange: onValueChangeProp as
+      | ((value: string | string[]) => void)
+      | undefined,
+  });
+
+  const childrenArr = Array.isArray(children) ? children : [children];
+
+  const Comp = as || View;
+
+  return (
+    <AccordionContext.Provider
+      value={{
+        disabled,
+        type,
+        value,
+        color,
+        variant,
+        onValueChange: setValue,
+      }}
+    >
+      <Comp ref={ref} style={[styles.accordion, style]} {...restProps}>
+        {childrenArr.map((child, i) => {
+          return (
+            <AccordionItemPositionContext.Provider
+              key={i}
+              value={
+                childrenArr.length === 1
+                  ? 'single'
+                  : i === 0
+                    ? 'first'
+                    : i === childrenArr.length - 1
+                      ? 'last'
+                      : 'middle'
+              }
+            >
+              {child}
+            </AccordionItemPositionContext.Provider>
+          );
+        })}
+      </Comp>
+    </AccordionContext.Provider>
+  );
+});
+
+type AccordionItemContextValue = {
   value: string;
   triggerId: string;
   expanded: boolean;
@@ -138,7 +169,7 @@ type AccordionItemContextProps = {
 };
 
 const AccordionItemContext =
-  React.createContext<AccordionItemContextProps | null>(null);
+  React.createContext<AccordionItemContextValue | null>(null);
 
 const useAccordionItem = () => {
   const ctx = React.useContext(AccordionItemContext);
@@ -148,261 +179,301 @@ const useAccordionItem = () => {
   return ctx;
 };
 
-type AccordionItemProps = ViewProps & {
-  asChild?: boolean;
-  disabled?: boolean;
-  value: string;
-};
+type AccordionItemProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    value: string;
+    disabled?: boolean;
+  };
 
-const AccordionItem = React.forwardRef<
-  React.ElementRef<typeof View>,
-  AccordionItemProps
+const AccordionItem = genericForwardRef(function AccordionItem<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
 >(
-  (
-    {
-      asChild = false,
-      disabled: disabledProp,
-      value,
-      style,
-      ...restProps
-    }: AccordionItemProps,
-    forwardedRef,
-  ) => {
-    const {
-      value: rootValue,
-      type,
-      disabled: rootDisabled,
-      color,
-      variant,
-    } = useAccordion();
-    const { styles } = useStyles(stylesheet, {
-      variant,
-    });
-    // priority: itemProps > rootProps
-    const disabled = disabledProp ?? rootDisabled ?? false;
+  {
+    as,
+    disabled: disabledProp,
+    value,
+    style,
+    ...restProps
+  }: AccordionItemProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const {
+    value: rootValue,
+    type,
+    disabled: rootDisabled,
+    color,
+    variant,
+  } = useAccordion();
+  const position = useAccordionItemPosition();
 
-    const rootSingleValue = rootValue as string;
-    const rootMultipleValue = rootValue as string[];
-    const expanded =
-      type === 'single'
-        ? rootSingleValue === value
-        : rootMultipleValue.includes(value);
+  const { styles } = useStyles(stylesheet, {
+    variant,
+    position,
+  });
 
-    const triggerId = React.useId();
+  // priority: itemProps > rootProps
+  const disabled = disabledProp ?? rootDisabled ?? false;
 
-    const Comp = asChild ? Slot : View;
+  const rootSingleValue = rootValue as string;
+  const rootMultipleValue = rootValue as string[];
+  const expanded =
+    type === 'single'
+      ? rootSingleValue === value
+      : rootMultipleValue.includes(value);
 
-    return (
-      <AccordionItemContext.Provider
-        value={{ expanded, disabled, triggerId, value }}
-      >
-        <Comp
-          ref={forwardedRef}
-          style={[styles.accordionItem(color), style]}
-          {...restProps}
-        />
-      </AccordionItemContext.Provider>
-    );
-  },
-);
+  const triggerId = React.useId();
 
-AccordionItem.displayName = 'AccordionItem';
+  const Comp = as || View;
 
-type AccordionTriggerProps = Omit<PressableProps, 'nativeId'> & {
-  asChild?: boolean;
-};
+  return (
+    <AccordionItemContext.Provider
+      value={{ expanded, disabled, triggerId, value }}
+    >
+      <Comp
+        ref={ref}
+        style={[styles.accordionItem(color), style]}
+        {...restProps}
+      />
+    </AccordionItemContext.Provider>
+  );
+});
 
-const AccordionTrigger = React.forwardRef<
-  React.ElementRef<typeof Pressable>,
-  AccordionTriggerProps
+type AccordionTriggerProps<T extends React.ElementType = typeof Pressable> =
+  Omit<PolymorphicProps<T>, 'nativeID' | 'children'> & {
+    children?:
+      | React.ReactNode
+      | ((state: { disabled: boolean; expanded: boolean }) => React.ReactNode);
+  };
+
+const AccordionTrigger = genericForwardRef(function AccordionTrigger<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Pressable>>,
 >(
-  (
-    {
-      asChild = false,
-      children,
-      accessibilityState,
-      disabled: disabledProp,
-      onPress: onPressProp,
-      style: styleProp,
-      ...restProps
-    }: AccordionTriggerProps,
-    forwardedRef,
-  ) => {
-    const {
-      type,
-      color,
-      variant,
-      value: rootValue,
-      onValueChange,
-    } = useAccordion();
-    const {
-      expanded,
-      disabled: itemDisabled,
-      triggerId,
-      value: itemValue,
-    } = useAccordionItem();
+  {
+    as,
+    children,
+    accessibilityState,
+    disabled: disabledProp,
+    onPress: onPressProp,
+    style: styleProp,
+    ...restProps
+  }: AccordionTriggerProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const {
+    type,
+    color,
+    variant,
+    value: rootValue,
+    onValueChange,
+  } = useAccordion();
+  const {
+    expanded,
+    disabled: itemDisabled,
+    triggerId,
+    value: itemValue,
+  } = useAccordionItem();
 
-    const disabled = itemDisabled ?? disabledProp ?? false;
+  const disabled = itemDisabled ?? disabledProp ?? false;
 
-    const { styles } = useStyles(stylesheet, {
-      variant,
-    });
+  const { styles } = useStyles(stylesheet, {
+    variant,
+  });
 
-    const onPress = React.useCallback(
-      (e: GestureResponderEvent) => {
-        if (disabled) {
-          return;
-        }
-        if (type === 'single') {
-          onValueChange(expanded ? '' : itemValue);
-        } else {
-          const rootMultipleValue = rootValue as string[];
-          onValueChange(
-            // @ts-ignore
-            expanded
-              ? rootMultipleValue.filter((v) => v !== itemValue)
-              : [...rootMultipleValue, itemValue],
-          );
-        }
-        onPressProp?.(e);
-      },
-      [
-        disabled,
-        type,
-        onPressProp,
-        onValueChange,
-        expanded,
-        itemValue,
-        rootValue,
-      ],
-    );
+  const onPress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      if (type === 'single') {
+        onValueChange(expanded ? '' : itemValue);
+      } else {
+        const rootMultipleValue = rootValue as string[];
+        onValueChange(
+          expanded
+            ? rootMultipleValue.filter((v) => v !== itemValue)
+            : [...rootMultipleValue, itemValue],
+        );
+      }
+      onPressProp?.(e);
+    },
+    [type, expanded, itemValue, rootValue, onPressProp, onValueChange],
+  );
 
-    const style = React.useCallback(
-      (state: PressableStateCallbackType) => {
-        return [
+  const Comp = as || Pressable;
+
+  return (
+    <View accessibilityRole="header">
+      <Comp
+        ref={ref}
+        nativeID={triggerId}
+        accessibilityRole="button"
+        accessibilityState={{
+          disabled,
+          expanded,
+          ...accessibilityState,
+        }}
+        disabled={disabled}
+        onPress={onPress}
+        style={(state) => [
           styles.accordionTrigger(state.pressed, color),
           typeof styleProp === 'function' ? styleProp(state) : styleProp,
-        ];
-      },
-      [color, styles, styleProp],
-    );
+        ]}
+        {...restProps}
+      >
+        {typeof children === 'function'
+          ? children({ disabled, expanded })
+          : children}
+      </Comp>
+    </View>
+  );
+});
 
-    const Comp = asChild ? Slot : Pressable;
-
-    return (
-      <View accessibilityRole="header">
-        <Comp
-          ref={forwardedRef}
-          nativeID={triggerId}
-          accessibilityRole="button"
-          accessibilityState={{
-            ...accessibilityState,
-            disabled,
-            expanded,
-          }}
-          disabled={disabled}
-          onPress={onPress}
-          style={style}
-          {...restProps}
-        >
-          {children}
-        </Comp>
-      </View>
-    );
-  },
-);
-
-AccordionTrigger.displayName = 'AccordionTrigger';
-
-type AccordionContentProps = Omit<ViewProps, 'accessibilityLabelledBy'> & {
-  asChild?: boolean;
+type AccordionIndicatorProps<
+  T extends React.ElementType = typeof Animated.View,
+> = PolymorphicProps<T> & {
+  transition?: 'rotate' | 'flip';
 };
 
-const AccordionContent = React.forwardRef<
-  React.ElementRef<typeof View>,
-  AccordionContentProps
+/**
+ * It helps to animate trigger indicator(e.g. icon).
+ */
+const AccordionIndicator = genericForwardRef(function AccordionIndicator<
+  T extends React.ElementType<
+    React.ComponentPropsWithoutRef<typeof Animated.View>
+  >,
 >(
-  (
-    {
-      asChild = false,
-      accessibilityRole = 'summary',
-      style,
-      ...restProps
-    }: AccordionContentProps,
-    forwardedRef,
-  ) => {
-    const { variant } = useAccordion();
-    const { triggerId, expanded } = useAccordionItem();
+  { transition = 'rotate', style, ...restProps }: AccordionIndicatorProps<T>,
+  ref: React.ForwardedRef<Animated.View>,
+) {
+  const { expanded } = useAccordionItem();
 
-    const { styles } = useStyles(stylesheet, {
-      variant,
-    });
-
-    const height = useSharedValue(0);
-
-    const animatedStyle = useAnimatedStyle(() => {
+  const animatedStyle = useAnimatedStyle(() => {
+    if (transition === 'flip') {
+      // TODO: improve flip animation
       return {
-        height: expanded
-          ? withTiming(height.value, animConfig)
-          : withTiming(0, animConfig),
-        overflow: 'hidden',
+        transform: [
+          {
+            rotateY: expanded
+              ? withTiming('180deg', animConfig)
+              : withTiming('0deg', animConfig),
+          },
+        ],
       };
-    });
+    }
+    return {
+      transform: [
+        {
+          rotate: expanded
+            ? withTiming('180deg', animConfig)
+            : withTiming('0deg', animConfig),
+        },
+      ],
+    };
+  });
 
-    const onLayout = React.useCallback(
-      (e: LayoutChangeEvent) => {
-        height.value = e.nativeEvent.layout.height;
-      },
-      [height],
-    );
+  return (
+    <Animated.View ref={ref} style={[animatedStyle, style]} {...restProps} />
+  );
+});
 
-    const Comp = asChild ? Slot : View;
+type AccordionContentProps<T extends React.ElementType = typeof View> = Omit<
+  PolymorphicProps<T>,
+  'accessibilityLabelledBy'
+>;
 
-    return (
-      <Animated.View style={animatedStyle}>
-        {expanded && (
-          <Animated.View
-            entering={FadeIn.duration(animConfig.duration)
-              .easing(animConfig.easing)
-              .reduceMotion(animConfig.reduceMotion)}
-            exiting={FadeOut.duration(animConfig.duration)
-              .easing(animConfig.easing)
-              .reduceMotion(animConfig.reduceMotion)}
-            onLayout={onLayout}
-            style={styles.accordionContentContainer}
-          >
-            <Comp
-              ref={forwardedRef}
-              accessibilityRole={accessibilityRole}
-              accessibilityLabelledBy={triggerId}
-              style={[styles.accordionContent, style]}
-              {...restProps}
-            />
-          </Animated.View>
-        )}
-      </Animated.View>
-    );
-  },
-);
+const AccordionContent = genericForwardRef(function AccordionContent<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  {
+    as,
+    accessibilityRole = 'summary',
+    style,
+    ...restProps
+  }: AccordionContentProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { variant } = useAccordion();
+  const { triggerId, expanded } = useAccordionItem();
 
-AccordionContent.displayName = 'AccordionContent';
+  const { styles } = useStyles(stylesheet, {
+    variant,
+  });
 
-export const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
+  const height = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: expanded
+        ? withTiming(height.value, animConfig)
+        : withTiming(0, animConfig),
+      overflow: 'hidden',
+    };
+  });
+
+  const onLayout = React.useCallback(
+    (e: LayoutChangeEvent) => {
+      height.value = e.nativeEvent.layout.height;
+    },
+    [height],
+  );
+
+  const Comp = as || View;
+
+  return (
+    <Animated.View style={animatedStyle}>
+      {expanded && (
+        <Animated.View
+          entering={FadeIn.duration(animConfig.duration)
+            .easing(animConfig.easing)
+            .reduceMotion(animConfig.reduceMotion)}
+          exiting={FadeOut.duration(animConfig.duration)
+            .easing(animConfig.easing)
+            .reduceMotion(animConfig.reduceMotion)}
+          onLayout={onLayout}
+          style={styles.accordionContentContainer}
+        >
+          <Comp
+            ref={ref}
+            accessibilityRole={accessibilityRole}
+            accessibilityLabelledBy={triggerId}
+            style={[styles.accordionContent, style]}
+            {...restProps}
+          />
+        </Animated.View>
+      )}
+    </Animated.View>
+  );
+});
+
+const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
   accordion: {
-    borderRadius: radius.md,
     overflow: 'hidden',
-    gap: space[8],
+    gap: space[2],
   },
   accordionItem: (color: Color) => ({
-    borderRadius: radius.md,
     borderCurve: 'continuous',
+    overflow: 'hidden',
     variants: {
       variant: {
         soft: {
           backgroundColor: colors[`${color}3`],
         },
-        ghost: {
-          backgroundColor: colors.transparent,
+      },
+      position: {
+        single: {
+          borderRadius: radius.md,
+        },
+        first: {
+          borderTopStartRadius: radius.md,
+          borderTopEndRadius: radius.md,
+          borderBottomStartRadius: radius.xs,
+          borderBottomEndRadius: radius.xs,
+        },
+        last: {
+          borderTopStartRadius: radius.xs,
+          borderTopEndRadius: radius.xs,
+          borderBottomStartRadius: radius.md,
+          borderBottomEndRadius: radius.md,
+        },
+        middle: {
+          borderRadius: radius.xs,
         },
       },
     },
@@ -412,16 +483,14 @@ export const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: space[8],
-    padding: space[16],
-    borderRadius: radius.md,
+    gap: space[12],
+    minHeight: 52,
+    height: 'auto',
+    paddingHorizontal: space[20],
     variants: {
       variant: {
         soft: {
           backgroundColor: pressed ? colors[`${color}4`] : colors[`${color}3`],
-        },
-        ghost: {
-          backgroundColor: pressed ? colors[`${color}4`] : colors.transparent,
         },
       },
     },
@@ -439,6 +508,7 @@ export {
   Accordion,
   AccordionItem,
   AccordionTrigger,
+  AccordionIndicator,
   AccordionContent,
   useAccordion,
   useAccordionItem,
@@ -447,5 +517,6 @@ export type {
   AccordionProps,
   AccordionItemProps,
   AccordionTriggerProps,
+  AccordionIndicatorProps,
   AccordionContentProps,
 };

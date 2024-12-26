@@ -1,19 +1,19 @@
-import React from 'react';
-import { View, ViewProps } from 'react-native';
+import * as React from 'react';
+import { View } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { Icon, IconProps } from './Icon';
 import { Text, TextProps } from './Text';
-import { Slot } from '@/utils/slot';
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import { genericForwardRef } from '@/utils/genericForwardRef';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 
 type BadgeColor = Color;
 type BadgeSize = 'sm' | 'md' | 'lg';
-type BadgeVariant = 'solid' | 'soft' | 'outline';
+type BadgeVariant = 'solid' | 'soft' | 'outline' | 'surface';
 
 type BadgeContextValue = {
   color: BadgeColor;
-  colorStep: ColorStep;
   size: BadgeSize;
   variant: BadgeVariant;
   highContrast: boolean;
@@ -31,68 +31,62 @@ const useBadge = () => {
   return ctx;
 };
 
-type BadgeProps = ViewProps & {
-  asChild?: boolean;
-  color?: BadgeColor;
-  size?: BadgeSize;
-  variant?: BadgeVariant;
-  highContrast?: boolean;
-  disabled?: boolean;
-  iconOnly?: boolean;
-};
+type BadgeProps<T extends React.ElementType = typeof View> =
+  PolymorphicProps<T> & {
+    color?: BadgeColor;
+    size?: BadgeSize;
+    variant?: BadgeVariant;
+    highContrast?: boolean;
+    disabled?: boolean;
+    iconOnly?: boolean;
+  };
 
-const Badge = React.forwardRef<React.ElementRef<typeof View>, BadgeProps>(
-  (
-    {
-      asChild = false,
-      color = 'primary',
-      size = 'md',
-      variant = 'solid',
-      highContrast = false,
-      disabled = false,
-      iconOnly = false,
-      style: styleProp,
-      ...restProps
-    },
-    forwardedRef,
-  ) => {
-    const { styles } = useStyles(stylesheet, {
-      size,
-      variant,
-    });
+const Badge = genericForwardRef(function Badge<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(
+  {
+    as,
+    color = 'primary',
+    size = 'md',
+    variant = 'solid',
+    highContrast = false,
+    disabled = false,
+    iconOnly = false,
+    style: styleProp,
+    ...restProps
+  }: BadgeProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
+  const { styles } = useStyles(stylesheet, {
+    size,
+    variant,
+  });
 
-    const colorStep: ColorStep =
-      variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
+  const Comp = as || View;
 
-    const Comp = asChild ? Slot : View;
-
-    return (
-      <BadgeContext.Provider
-        value={{
-          color,
-          colorStep,
-          size,
-          variant,
-          highContrast,
-          disabled,
-          iconOnly,
-        }}
-      >
-        <Comp
-          ref={forwardedRef}
-          style={[
-            styles.badge(color, iconOnly),
-            disabled && styles.badgeDisabled,
-            styleProp,
-          ]}
-          {...restProps}
-        />
-      </BadgeContext.Provider>
-    );
-  },
-);
-
-Badge.displayName = 'Badge';
+  return (
+    <BadgeContext.Provider
+      value={{
+        color,
+        size,
+        variant,
+        highContrast,
+        disabled,
+        iconOnly,
+      }}
+    >
+      <Comp
+        ref={ref}
+        style={[
+          styles.badge(color, iconOnly),
+          disabled && styles.badgeDisabled,
+          styleProp,
+        ]}
+        {...restProps}
+      />
+    </BadgeContext.Provider>
+  );
+});
 
 const textFontSizeMap: Record<
   NonNullable<BadgeProps['size']>,
@@ -103,17 +97,19 @@ const textFontSizeMap: Record<
   lg: 14,
 };
 
-type BadgeTextProps = TextProps;
+type BadgeTextProps<T extends React.ElementType = typeof Text> = TextProps<T>;
 
-const BadgeText = React.forwardRef<
-  React.ElementRef<typeof Text>,
-  BadgeTextProps
->((props, forwardedRef) => {
-  const { color, colorStep, size, disabled } = useBadge();
+const BadgeText = genericForwardRef(function BadgeText<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof Text>>,
+>(props: BadgeTextProps<T>, ref: React.ForwardedRef<T>) {
+  const { color, variant, highContrast, size, disabled } = useBadge();
+
+  const colorStep: ColorStep =
+    variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
 
   return (
     <Text
-      ref={forwardedRef}
+      ref={ref}
       color={color}
       colorStep={colorStep}
       fontSize={textFontSizeMap[size]}
@@ -125,15 +121,13 @@ const BadgeText = React.forwardRef<
   );
 });
 
-BadgeText.displayName = 'BadgeText';
-
 const iconSizeMap: Record<
   NonNullable<BadgeProps['size']>,
   IconProps['size']
 > = {
-  sm: 'xs',
-  md: 'sm',
-  lg: 'md',
+  sm: '2xs',
+  md: 'xs',
+  lg: 'sm',
 };
 
 type BadgeIconProps = IconProps;
@@ -141,12 +135,15 @@ type BadgeIconProps = IconProps;
 const BadgeIcon = React.forwardRef<
   React.ElementRef<typeof Icon>,
   BadgeIconProps
->((props, forwardedRef) => {
-  const { color, colorStep, size, highContrast, disabled } = useBadge();
+>(function BadgeIcon(props, ref) {
+  const { color, size, variant, highContrast, disabled } = useBadge();
+
+  const colorStep: ColorStep =
+    variant === 'solid' ? 'Contrast' : highContrast ? '12' : '11';
 
   return (
     <Icon
-      ref={forwardedRef}
+      ref={ref}
       color={color}
       colorStep={colorStep}
       size={iconSizeMap[size]}
@@ -156,8 +153,6 @@ const BadgeIcon = React.forwardRef<
     />
   );
 });
-
-BadgeIcon.displayName = 'BadgeIcon';
 
 const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
   badge: (color: Color, iconOnly: boolean) => ({
@@ -172,19 +167,19 @@ const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
           width: iconOnly ? 20 : 'auto',
           height: 20,
           gap: space[2],
-          paddingHorizontal: iconOnly ? 0 : space[6],
+          paddingHorizontal: iconOnly ? 0 : space[8],
         },
         md: {
           width: iconOnly ? 24 : 'auto',
           height: 24,
           gap: space[4],
-          paddingHorizontal: iconOnly ? 0 : space[8],
+          paddingHorizontal: iconOnly ? 0 : space[10],
         },
         lg: {
           width: iconOnly ? 28 : 'auto',
           height: 28,
           gap: space[4],
-          paddingHorizontal: iconOnly ? 0 : space[10],
+          paddingHorizontal: iconOnly ? 0 : space[12],
         },
       },
       variant: {
@@ -199,19 +194,27 @@ const stylesheet = createStyleSheet(({ colors, radius, space }) => ({
           backgroundColor: colors.transparent,
           borderColor: colors[`${color}7`],
         },
+        surface: {
+          borderWidth: 1,
+          backgroundColor: colors[`${color}3`],
+          borderColor: colors[`${color}7`],
+        },
       },
     },
   }),
   badgeDisabled: {
     backgroundColor: colors.neutral3,
+    borderColor: colors.neutral6,
     variants: {
       variant: {
         solid: {},
         soft: {},
         outline: {
           borderWidth: 1,
-          borderColor: colors.neutral6,
           backgroundColor: colors.transparent,
+        },
+        surface: {
+          borderWidth: 1,
         },
       },
     },

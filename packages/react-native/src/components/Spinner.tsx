@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleProp, ViewStyle } from 'react-native';
+import * as React from 'react';
+import type { StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   useSharedValue,
   withRepeat,
@@ -10,7 +10,7 @@ import Animated, {
 import Svg, { Circle } from 'react-native-svg';
 import { useStyles } from 'react-native-unistyles';
 
-import { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens/colors';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
@@ -33,80 +33,74 @@ const spinnerSizeMap: Record<NonNullable<SpinnerProps['size']>, number> = {
 };
 
 const Spinner = React.forwardRef<React.ElementRef<typeof Svg>, SpinnerProps>(
-  ({ loading = true, ...restProps }: SpinnerProps, forwardedRef) => {
+  function Spinner({ loading = true, ...restProps }: SpinnerProps, ref) {
     if (!loading) {
       return null;
     }
-    return <SpinnerImpl ref={forwardedRef} {...restProps} />;
+    return <SpinnerImpl ref={ref} {...restProps} />;
   },
 );
-
-Spinner.displayName = 'Spinner';
 
 type SpinnerImplProps = Omit<SpinnerProps, 'loading'>;
 
 const SpinnerImpl = React.forwardRef<
   React.ElementRef<typeof Svg>,
   SpinnerImplProps
->(
-  (
-    {
-      color: colorProp = 'neutral',
-      colorStep,
-      highContrast = false,
-      size: sizeProp = 'md',
-      style,
-    }: SpinnerProps,
-    forwardedRef,
-  ) => {
-    const { theme } = useStyles();
+>(function SpinnerImpl(
+  {
+    color: colorProp = 'neutral',
+    colorStep,
+    highContrast = false,
+    size: sizeProp = 'md',
+    style,
+  }: SpinnerProps,
+  ref,
+) {
+  const { theme } = useStyles();
 
-    const color =
-      theme.colors[`${colorProp}${colorStep ?? (highContrast ? 12 : 11)}`];
+  const color =
+    theme.colors[`${colorProp}${colorStep ?? (highContrast ? 12 : 11)}`];
 
-    const size = spinnerSizeMap[sizeProp];
-    const strokeWidth = size / 12;
-    const center = size / 2;
-    const radius = size / 2 - strokeWidth / 2;
-    const circumference = 2 * Math.PI * radius;
+  const size = spinnerSizeMap[sizeProp];
+  const strokeWidth = size / 12;
+  const center = size / 2;
+  const radius = size / 2 - strokeWidth / 2;
+  const circumference = 2 * Math.PI * radius;
 
-    const rotation = useSharedValue(0);
+  const rotation = useSharedValue(0);
 
-    React.useEffect(() => {
-      rotation.value = withRepeat(
-        withTiming(360, { duration: 600, easing: Easing.linear }),
-        -1,
-      );
-    }, [rotation]);
-
-    const animatedStyles = useAnimatedStyle(() => ({
-      transform: [{ rotate: `${rotation.value}deg` }],
-    }));
-
-    return (
-      <AnimatedSvg
-        ref={forwardedRef}
-        width={size}
-        height={size}
-        viewBox={`0 0 ${size} ${size}`}
-        style={[animatedStyles, style]}
-      >
-        <Circle
-          r={radius}
-          cx={center}
-          cy={center}
-          fill={theme.colors.transparent}
-          stroke={color}
-          strokeWidth={strokeWidth}
-          strokeDasharray={`${circumference / 1.5} ${circumference}`} // Single dash
-          strokeLinecap="round"
-        />
-      </AnimatedSvg>
+  React.useEffect(() => {
+    rotation.value = withRepeat(
+      withTiming(360, { duration: 600, easing: Easing.linear }),
+      -1,
     );
-  },
-);
+  }, [rotation]);
 
-SpinnerImpl.displayName = 'SpinnerImpl';
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  return (
+    <AnimatedSvg
+      ref={ref}
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      style={[animatedStyles, style]}
+    >
+      <Circle
+        r={radius}
+        cx={center}
+        cy={center}
+        fill={theme.colors.transparent}
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeDasharray={`${circumference / 1.5} ${circumference}`} // Single dash
+        strokeLinecap="round"
+      />
+    </AnimatedSvg>
+  );
+});
 
 export { Spinner };
 export type { SpinnerProps };

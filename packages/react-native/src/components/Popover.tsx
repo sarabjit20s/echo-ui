@@ -1,7 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import { View } from 'react-native';
 import Animated, {
   Easing,
+  FadeIn,
+  FadeOut,
   Keyframe,
   ReduceMotion,
 } from 'react-native-reanimated';
@@ -23,6 +25,7 @@ import {
   PopupTrigger,
   PopupTriggerProps,
 } from './Popup';
+import { genericForwardRef } from '@/utils/genericForwardRef';
 
 const animConfig = {
   duration: 200,
@@ -34,33 +37,41 @@ type PopoverProps = PopupProps;
 
 const Popover = Popup;
 
-Popover.displayName = 'Popover';
-
 type PopoverTriggerProps = PopupTriggerProps;
 
 const PopoverTrigger = PopupTrigger;
-
-PopoverTrigger.displayName = 'PopoverTrigger';
 
 type PopoverAnchorProps = PopupAnchorProps;
 
 const PopoverAnchor = PopupAnchor;
 
-PopoverAnchor.displayName = 'PopoverAnchor';
-
+const AnimatedPopupOverlay = Animated.createAnimatedComponent(PopupOverlay);
 const AnimatedPopupContent = Animated.createAnimatedComponent(PopupContent);
 
-type PopoverContentProps = PopupContentProps;
+type PopoverContentProps<T extends React.ElementType = typeof PopupContent> =
+  PopupContentProps<T>;
 
-const PopoverContent = React.forwardRef<
-  React.ElementRef<typeof View>,
-  PopoverContentProps
->(({ style, ...restProps }, ref) => {
+const PopoverContent = genericForwardRef(function PopoverContent<
+  T extends React.ElementType<
+    React.ComponentPropsWithoutRef<typeof PopupContent>
+  >,
+>(
+  { style, ...restProps }: PopoverContentProps<T>,
+  ref: React.ForwardedRef<View>,
+) {
   const { styles } = useStyles(stylesheet);
 
   return (
     <PopupPortal>
-      <PopupOverlay />
+      <AnimatedPopupOverlay
+        entering={FadeIn.duration(animConfig.duration)
+          .easing(animConfig.easing)
+          .reduceMotion(animConfig.reduceMotion)}
+        exiting={FadeOut.duration(animConfig.duration)
+          .easing(animConfig.easing)
+          .reduceMotion(animConfig.reduceMotion)}
+        style={styles.overlay}
+      />
       <AnimatedPopupContent
         ref={ref}
         style={[styles.content, style]}
@@ -76,18 +87,16 @@ const PopoverContent = React.forwardRef<
   );
 });
 
-PopoverContent.displayName = 'PopoverContent';
-
 type PopoverArrowProps = PopupArrowProps;
 
 const PopoverArrow = React.forwardRef<
   React.ElementRef<typeof PopupArrow>,
   PopoverArrowProps
->((props, forwardedRef) => {
+>(function PopoverArrow(props, ref) {
   const { theme } = useStyles();
   return (
     <PopupArrow
-      ref={forwardedRef}
+      ref={ref}
       arrowColor={theme.colors.neutral2}
       arrowSize={6}
       {...props}
@@ -95,15 +104,14 @@ const PopoverArrow = React.forwardRef<
   );
 });
 
-PopoverArrow.displayName = 'PopoverArrow';
-
 type PopoverCloseProps = PopupCloseProps;
 
 const PopoverClose = PopupClose;
 
-PopoverClose.displayName = 'PopoverClose';
-
 const stylesheet = createStyleSheet(({ colors, space, radius }) => ({
+  overlay: {
+    backgroundColor: colors.overlayMuted,
+  },
   content: {
     backgroundColor: colors.neutral2,
     padding: space[16],
@@ -123,7 +131,7 @@ const stylesheet = createStyleSheet(({ colors, space, radius }) => ({
 const entryAnim = new Keyframe({
   0: {
     opacity: 0,
-    transform: [{ scale: 0.5 }],
+    transform: [{ scale: 0.75 }],
   },
   100: {
     opacity: 1,
@@ -139,7 +147,7 @@ const exitAnim = new Keyframe({
   },
   100: {
     opacity: 0,
-    transform: [{ scale: 0.5 }],
+    transform: [{ scale: 0.75 }],
     easing: animConfig.easing,
   },
 });
