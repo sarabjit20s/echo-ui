@@ -1,0 +1,42 @@
+---
+title: genericForwardRef
+description: A utility to create a generic component that accepts a ref
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readUtilFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+<Step>
+Copy and paste the following code into `utils/genericForwardRef.ts`.
+<DynamicCodeBlock lang="ts" code={readUtilFile('genericForwardRef')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+</Steps>
+
+## Usage
+
+```tsx title="MyComponent.tsx"
+import * as React from 'react';
+import { View } from 'react-native';
+
+import { genericForwardRef } from '@/utils/genericForwardRef';
+
+type MyComponentProps<T extends React.ElementType = typeof View> =
+  React.ComponentPropsWithRef<T> & {
+    as?: T;
+  }
+
+const MyComponent = genericForwardRef(function MyComponent<
+  T extends React.ElementType<React.ComponentPropsWithoutRef<typeof View>>,
+>(props: MyComponentProps, ref: React.ForwardedRef<View>) {
+  return (
+    <View ref={ref} {...props} />
+  )
+});
+```
