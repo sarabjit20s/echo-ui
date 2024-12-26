@@ -34,6 +34,13 @@ export function readUtilFile(fileName: string, fileExtension = 'ts') {
   );
 }
 
+export function readTypeFile(fileName: string, fileExtension = 'ts') {
+  return readFile(
+    'node_modules/@echo-ui/react-native/src/types/' +
+      `${fileName}.${fileExtension}`,
+  );
+}
+
 export function readTokenFile(fileName: string, fileExtension = 'ts') {
   return readFile(
     'node_modules/@echo-ui/react-native/src/styles/tokens/' +
