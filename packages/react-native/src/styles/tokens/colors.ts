@@ -180,6 +180,7 @@ const lightThemeColors = {
 
   background: '#fff',
   overlay: blackA.blackA6,
+  overlayMuted: blackA.blackA3,
   shadow: neutral.neutralA9,
 } as const;
 
@@ -192,6 +193,7 @@ const darkThemeColors = {
 
   background: '#020202',
   overlay: blackA.blackA8,
+  overlayMuted: blackA.blackA6,
   shadow: neutral.neutralA11,
 } as const;
 
