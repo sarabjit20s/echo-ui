@@ -1,0 +1,20 @@
+---
+title: Components
+description: Useful types for components
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { readTypeFile } from '@/lib/readFile';
+
+## Installation
+
+<Steps>
+<Step>
+Copy and paste the following code into `types/components.ts`.
+<DynamicCodeBlock lang="ts" code={readTypeFile('components')} />
+</Step>
+
+<Step>Update the import paths to match your project setup.</Step>
+</Steps>

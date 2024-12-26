@@ -10,6 +10,8 @@
     "---Hooks---",
     "...hooks",
     "---Utilities---",
-    "...utils"
+    "...utils",
+    "---Types---",
+    "...types"
   ]
 }
