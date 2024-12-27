@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 
@@ -124,14 +125,28 @@ export type ComponentPreviewProps = {
 
 export const ComponentPreview = ({ name }: ComponentPreviewProps) => {
   const { resolvedTheme } = useTheme();
+  const [classNameTheme, setClassNameTheme] = useState<Theme>('light');
 
-  // useTheme() returns undefined sometimes
-  // try to get theme from className
-  const classNameTheme: Theme = document.documentElement.className
-    .split('')
-    .includes('dark')
-    ? 'dark'
-    : 'light';
+  useEffect(() => {
+    // useTheme() returns undefined sometimes
+    // try to get theme from className
+    const docElem = document.documentElement;
+
+    const observer = new MutationObserver(() => {
+      const className = docElem.className;
+      const theme: Theme = className.includes('dark') ? 'dark' : 'light';
+
+      setClassNameTheme(theme);
+    });
+
+    observer.observe(docElem, {
+      attributes: true,
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   const theme: Theme = (resolvedTheme || classNameTheme) as Theme;
 
@@ -149,6 +164,7 @@ export const ComponentPreview = ({ name }: ComponentPreviewProps) => {
       height={imgHeight}
       className="rounded-xl border bg-fd-accent"
       priority
+      suppressHydrationWarning
     />
   );
 };
