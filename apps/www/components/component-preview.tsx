@@ -1,9 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const components = [
   'Accordion',
   'Alert',
@@ -124,13 +122,14 @@ export type ComponentPreviewProps = {
 };
 
 export const ComponentPreview = ({ name }: ComponentPreviewProps) => {
-  const { resolvedTheme } = useTheme();
-  const [classNameTheme, setClassNameTheme] = useState<Theme>('light');
+  const initialClassName = window.document.documentElement.className;
+
+  const [classNameTheme, setClassNameTheme] = useState<Theme>(
+    initialClassName.includes('dark') ? 'dark' : 'light',
+  );
 
   useEffect(() => {
-    // useTheme() returns undefined sometimes
-    // try to get theme from className
-    const docElem = document.documentElement;
+    const docElem = window.document.documentElement;
 
     const observer = new MutationObserver(() => {
       const className = docElem.className;
@@ -148,11 +147,15 @@ export const ComponentPreview = ({ name }: ComponentPreviewProps) => {
     };
   }, []);
 
-  const theme: Theme = (resolvedTheme || classNameTheme) as Theme;
+  const theme: Theme = classNameTheme as Theme;
+
+  if (!components.includes(name)) {
+    return;
+  }
 
   const src = previews[name][theme];
 
-  if (!src) {
+  if (!src || src.length === 0) {
     return;
   }
 
