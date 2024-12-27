@@ -6,7 +6,11 @@ description: A control that allows the user to toggle between checked and not ch
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="Checkbox" />
 
 ## Installation
 
@@ -16,7 +20,6 @@ import { readComponentFile } from '@/lib/readFile';
 Make sure you have installed the following dependencies:
 #### Internal Dependencies
   - <Link href={'/docs/components/icon'}>Icon</Link>
-  - <Link href={'/docs/utils/slot'}>Slot</Link>
   - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
 </Step>
 

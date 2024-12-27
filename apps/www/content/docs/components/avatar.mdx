@@ -6,17 +6,15 @@ description: Profile picture, user initials or fallback icon.
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="Avatar" />
 
 ## Installation
 
 <Steps>
-
-<Step>
-Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/utils/slot'}>Slot</Link>
-</Step>
 
 <Step>
 Copy and paste the following code into `components/ui/Avatar.tsx`.
@@ -37,6 +35,7 @@ import {
   AvatarFallback,
   AvatarImage,
   AvatarProps,
+  AvatarText,
 } from '@/components/ui/Avatar';
 import { Text } from '@/components/ui/Text';
 
@@ -45,9 +44,9 @@ export function MyAvatar() {
     <Avatar>
       <AvatarImage src="https://avatar.iran.liara.run/public?username=John+Doe" />
       <AvatarFallback>
-        <Text color="primary">
+        <AvatarText>
           JD
-        </Text>
+        </AvatarText>
       </AvatarFallback>
     </Avatar>
   );

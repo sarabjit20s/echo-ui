@@ -8,19 +8,22 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 import { Callout } from 'fumadocs-ui/components/callout';
 import { File, Folder, Files } from 'fumadocs-ui/components/files';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { readStylesFile, readTokenFile } from '@/lib/readFile';
+import { readStylesFile, readTokenFile, readUtilFile, readTypeFile } from '@/lib/readFile';
 
 ## Introduction
 
-**EchoUI** is a collection of pre-built, high-quality React Native components designed to accelerate your mobile app development. Components are designed to deliver smooth and efficient performance on both Android and iOS. All components are made with [`react-native-unistyles`](https://www.unistyl.es/).
+**Echo UI** is a collection of pre-built, high-quality React Native components designed to accelerate your mobile app development. Components are designed to deliver smooth and efficient performance on both Android and iOS. All components are made with [`react-native-unistyles`](https://www.unistyl.es/).
 
+<Callout type='warn' title="Development preview">
+Echo UI is currently in development and may subject to change. If you find any bugs or have any suggestions, please [open an issue](https://github.com/sarabjit20s/echo-ui/issues).
+</Callout>
 ## Installation
 
 <Steps>
 
 <Step>
 ### Install Unistyles
-For more information, see [Unistyles](https://www.unistyl.es/).
+For more information, see [Unistyles](https://v2.unistyl.es/start/setup/).
 </Step>
 
 <Tabs groupId='package-manager' persist items={['npm', 'pnpm', 'yarn']}>
@@ -41,7 +44,7 @@ yarn add react-native-unistyles
 ### Configure Themes
 
 1. Create a `styles` directory in your project. This is where you will keep your theme configuration.
-2. Create a `tokens` directory inside your `styles` directory.
+2. Create a `tokens` directory inside your `styles` directory. This is where you will keep your token configuration.
 3. Install Radix UI Colors:
 <Tabs groupId='package-manager' persist items={['npm', 'pnpm', 'yarn']}>
 ```bash tab="npm"
@@ -58,27 +61,35 @@ yarn add @radix-ui/colors
 </Tabs>
 <Callout>To understand the color palette, see [Radix UI Colors](https://www.radix-ui.com/colors).</Callout>
 
-4. Create a `colors.ts` file in your `tokens` directory and add the following code:
+4. Copy and paste the following code into `styles/tokens/colors.ts` file:
 <DynamicCodeBlock lang="ts" code={readTokenFile('colors')} />
 
-5. Create a `typography.ts` file in your `tokens` directory and add the following code:
+5. Copy and paste the following code into `styles/tokens/typography.ts` file:
 
 <Callout>Download [Inter](https://rsms.me/inter) font and follow these [docs](https://docs.expo.dev/develop/user-interface/fonts/#use-a-local-font-file) if you are using Expo to use it in your project.</Callout>
 
 <DynamicCodeBlock lang="ts" code={readTokenFile('typography')} />
 
-6. Create a `space.ts` file in your `tokens` directory and add the following code:
+6. Copy and paste the following code into `styles/tokens/space.ts` file:
 <DynamicCodeBlock lang="ts" code={readTokenFile('space')} />
 
-7. Create a `radius.ts` file in your `tokens` directory and add the following code:
+7. Copy and paste the following code into `styles/tokens/radius.ts` file:
 <DynamicCodeBlock lang="ts" code={readTokenFile('radius')} />
 
-8. Create a `themes.ts` file in your `styles` directory and add the following code:
+8. Copy and paste the following code into `styles/themes.ts` file:
 <DynamicCodeBlock lang="ts" code={readStylesFile('themes')} />
 
-9. Create a `breakpoints.ts` file in your `styles` directory and add the following code:
+9. Copy and paste the following code into `styles/breakpoints.ts` file:
 <DynamicCodeBlock lang="ts" code={readStylesFile('breakpoints')} />
 
+</Step>
+
+<Step>
+  ### Required utilities
+  1. Copy and paste the following code into `utils/genericForwardRef.ts` file:
+  <DynamicCodeBlock lang="ts" code={readUtilFile('genericForwardRef')} />
+  2. Copy and paste the following code into `types/components.ts` file:
+  <DynamicCodeBlock lang="ts" code={readTypeFile('components')} />
 </Step>
 
 <Step>
@@ -182,6 +193,39 @@ export default function RootLayout() {
 </Step>
 
 <Step>
+### Create a local development build
+<Callout title="Dev client only">
+Unistyles includes custom native code, which means **it does not support Expo Go**.
+</Callout>
+
+<Tabs groupId='framework' items={['React Native', 'Expo']}>
+  <Tab value='React Native'>
+    Run the following commands to build and run the app:
+    ```bash
+    # Android
+    npx react-native run-android
+    # iOS
+    npx react-native run-ios
+    ```
+  </Tab>
+  <Tab value='Expo'>
+    1. Generate native directories
+    ```bash
+    npx expo prebuild --clean
+    ```
+
+    2. Run the following commands to build and run the app:
+    ```bash
+    # Android
+    npx expo run:android
+    # iOS
+    npx expo run:ios
+    ```
+  </Tab>
+</Tabs>
+</Step>
+
+<Step>
 ### All Set!
 
 You can now start adding components to your app.
@@ -190,9 +234,8 @@ You can now start adding components to your app.
 </Steps>
 
 ## Essential Components, Hooks and Utilities
-To make the most out of this library, we recommend familiarizing yourself with the following components, hooks, and utilities. These are foundational and are used frequently across various components in the library:
+These are some foundational components and hooks, which are used frequently across various components.
 
 - [**Text**](/docs/components/text): A versatile text component designed for consistent typography.
 - [**Icon**](/docs/components/icon): A customizable icon component for adding icons to your UI.
-- [**Slot**](/docs/utils/slot): A utility for flexible component composition.
 - [**useControllableState**](/docs/hooks/useControllableState): A hook for managing controllable and uncontrollable states seamlessly.

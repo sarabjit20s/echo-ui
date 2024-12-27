@@ -6,7 +6,11 @@ description: Display a popover or a component that looks like a popover.
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="Popover" />
 
 ## Installation
 
@@ -46,10 +50,8 @@ import { Text } from '@/components/ui/Text';
 export function MyDropdownMenu() {
   return (
     <Popover>
-      <PopoverTrigger asChild>
-        <Button>
-          <ButtonText>Open Popover</ButtonText>
-        </Button>
+      <PopoverTrigger as={Button}>
+        <ButtonText>Open Popover</ButtonText>
       </PopoverTrigger>
       <PopoverContent maxWidth={260}>
         <PopoverArrow />

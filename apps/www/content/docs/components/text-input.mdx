@@ -1,22 +1,20 @@
 ---
-title: TextInput
+title: Text Input
 description: A text input that allows the user to enter text.
 ---
 
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="TextInput" />
 
 ## Installation
 
 <Steps>
-
-<Step>
-Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/utils/slot'}>Slot</Link>
-</Step>
 
 <Step>
 Copy and paste the following code into `components/ui/TextInput.tsx`.
@@ -36,7 +34,7 @@ import { TextInput } from '@/components/ui/TextInput';
 
 export function MyTextInput() {
   return (
-    <TextInput />
+    <TextInput placeholder="Enter your name" />
   );
 }
 ```

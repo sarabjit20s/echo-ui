@@ -6,7 +6,11 @@ description: A vertically stacked set of interactive headings that each reveal a
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="Accordion" />
 
 ## Installation
 
@@ -15,7 +19,6 @@ import { readComponentFile } from '@/lib/readFile';
 <Step>
 Make sure you have installed the following dependencies:
 #### Internal Dependencies
-  - <Link href={'/docs/utils/slot'}>Slot</Link>
   - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
 #### External Dependencies
   - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
@@ -42,6 +45,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  AccordionIndicator,
 } from '@/components/ui/Accordion';
 import { Icon } from '@/components/ui/Icon';
 import { Text } from '@/components/ui/Text';
@@ -67,22 +71,18 @@ const data = [
 ];
 
 export function MyAccordion() {
-  const [value, setValue] = React.useState<string[]>([]);
-
   return (
     <Accordion>
       {data.map(({ id, title, content }) => {
-        const expanded = value.includes(id);
         return (
           <AccordionItem key={id} value={id}>
             <AccordionTrigger>
               <Text variant="labelMd" highContrast>
                 {title}
               </Text>
-              <Icon
-                name={expanded ? 'chevron-up' : 'chevron-down'}
-                highContrast
-              />
+              <AccordionIndicator>
+                <Icon name={'chevron-down'} />
+              </AccordionIndicator>
             </AccordionTrigger>
             <AccordionContent>
               <Text variant="bodySm">{content}</Text>

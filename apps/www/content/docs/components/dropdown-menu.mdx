@@ -6,7 +6,11 @@ description: Displays a menu to the user that allows them to perform actions.
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="DropdownMenu" />
 
 ## Installation
 
@@ -20,7 +24,6 @@ Make sure you have installed the following dependencies:
   - <Link href={'/docs/components/popup'}>Popup</Link>
   - <Link href={'/docs/components/radio-group'}>Radio Group</Link>
   - <Link href={'/docs/components/separator'}>Separator</Link>
-  - <Link href={'/docs/utils/slot'}>Slot</Link>
   - <Link href={'/docs/components/text'}>Text</Link>
 #### External Dependencies
   - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
@@ -55,10 +58,8 @@ import { Button, ButtonIcon } from '@/components/ui/Button';
 export function MyDropdownMenu() {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="soft" accessibilityLabel="Open menu" iconOnly>
-          <ButtonIcon name="ellipsis-vertical" />
-        </Button>
+      <DropdownMenuTrigger as={Button} variant="soft" accessibilityLabel="Open menu" iconOnly>
+        <ButtonIcon name="ellipsis-vertical" />
       </DropdownMenuTrigger>
       <DropdownMenuContent minWidth={240} placement="bottom-start">
         <DropdownMenuItem>

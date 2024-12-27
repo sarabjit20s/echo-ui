@@ -6,17 +6,15 @@ description: Display text using well-defined typographic styles.
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="Text" />
 
 ## Installation
 
 <Steps>
-
-<Step>
-Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/utils/slot'}>Slot</Link>
-</Step>
 
 <Step>
 Copy and paste the following code into `components/ui/Text.tsx`.
@@ -36,7 +34,7 @@ import { Text } from '@/components/ui/Text';
 
 export function MyText() {
   return (
-    <Text>This is the text component</Text>
+    <Text>Typography is a set of rules that determine the appearance of text.</Text>
   );
 }
 ```

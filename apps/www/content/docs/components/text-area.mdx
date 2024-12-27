@@ -1,12 +1,16 @@
 ---
-title: TextArea
+title: Text Area
 description: A text area that allows the user to enter multiple lines of text.
 ---
 
 import Link from 'next/link';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
 import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="TextArea" />
 
 ## Installation
 
@@ -30,7 +34,7 @@ import { TextArea } from '@/components/ui/TextArea';
 
 export function MyTextArea() {
   return (
-    <TextArea />
+    <TextArea placeholder="Comment" />
   );
 }
 ```
