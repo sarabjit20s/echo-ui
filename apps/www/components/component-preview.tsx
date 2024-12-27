@@ -1,6 +1,7 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { ImageZoom } from 'fumadocs-ui/components/image-zoom';
+import { cn } from '@/lib/cn';
 
 const components = [
   'Accordion',
@@ -113,7 +114,8 @@ const previews: Record<ComponentName, Preview> = {
   },
 };
 
-const ratio = 2.1679389313; // height / width
+// const ratio = 2.158; // height / width
+const ratio = 2.168; // height / width
 const imgWidth = 240;
 const imgHeight = imgWidth * ratio;
 
@@ -122,13 +124,9 @@ export type ComponentPreviewProps = {
 };
 
 export const ComponentPreview = ({ name }: ComponentPreviewProps) => {
-  const initialClassName = window.document.documentElement.className;
+  const [classNameTheme, setClassNameTheme] = useState<Theme | null>(null);
 
-  const [classNameTheme, setClassNameTheme] = useState<Theme>(
-    initialClassName.includes('dark') ? 'dark' : 'light',
-  );
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     const docElem = window.document.documentElement;
 
     const observer = new MutationObserver(() => {
@@ -140,6 +138,7 @@ export const ComponentPreview = ({ name }: ComponentPreviewProps) => {
 
     observer.observe(docElem, {
       attributes: true,
+      subtree: true,
     });
 
     return () => {
@@ -147,27 +146,38 @@ export const ComponentPreview = ({ name }: ComponentPreviewProps) => {
     };
   }, []);
 
-  const theme: Theme = classNameTheme as Theme;
-
   if (!components.includes(name)) {
     return;
   }
 
-  const src = previews[name][theme];
-
-  if (!src || src.length === 0) {
-    return;
-  }
+  const src = classNameTheme ? previews[name][classNameTheme] : null;
 
   return (
-    <ImageZoom
-      src={src}
-      alt={`Preview of ${name} component`}
-      width={imgWidth}
-      height={imgHeight}
-      className="rounded-xl border bg-fd-accent"
-      priority
-      suppressHydrationWarning
-    />
+    <div
+      className={cn(
+        'relative rounded-xl',
+        !src ? 'bg-fd-accent' : 'bg-transparent',
+      )}
+      style={{
+        width: imgWidth,
+        height: imgHeight,
+        // fumadocs-ui adds 2em to the top and bottom on image comp by default
+        // this is to avoid layout shifting
+        marginTop: !src ? '2em' : 0,
+        marginBottom: !src ? '2em' : 0,
+      }}
+    >
+      {src && (
+        <ImageZoom
+          src={src}
+          alt={`Preview of ${name} component`}
+          width={imgWidth}
+          height={imgHeight}
+          className="border rounded-xl"
+          priority
+          suppressHydrationWarning
+        />
+      )}
+    </div>
   );
 };
