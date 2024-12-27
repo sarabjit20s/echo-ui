@@ -1,0 +1,80 @@
+---
+title: Collapsible
+description: A component that allows the user to expand or collapse content.
+---
+
+import Link from 'next/link';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
+import { ComponentPreview } from '@/components/component-preview';
+import { readComponentFile } from '@/lib/readFile';
+
+## Preview
+<ComponentPreview name="Collapsible" />
+
+## Installation
+
+<Steps>
+
+<Step>
+Make sure you have installed the following dependencies:
+#### Internal Dependencies
+  - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
+#### External Dependencies
+  - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
+</Step>
+
+<Step>
+Copy and paste the following code into `components/ui/Collapsible.tsx`.
+<DynamicCodeBlock lang="tsx" code={readComponentFile('Collapsible')} />
+</Step>
+
+<Step>
+Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+## Usage
+
+```tsx title="MyCollapsible.tsx"
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/Collapsible';
+import { Button, ButtonIcon } from '@/components/ui/Button';
+import { Text } from '@/components/ui/Text';
+
+export function MyCheckbox() {
+  const { styles } = useStyles(stylesheet);
+
+  return (
+    <Collapsible>
+      <CollapsibleTrigger as={Button} variant="soft" iconOnly>
+        <ButtonIcon name={'chevron-expand'} />
+      </CollapsibleTrigger>
+      <CollapsibleContent style={styles.collapsibleContent}>
+        <Text variant="bodySm">
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book.
+        </Text>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+}
+
+const stylesheet = createStyleSheet((theme) => ({
+  collapsibleContent: {
+    padding: theme.space[12],
+    gap: theme.space[4],
+    borderRadius: theme.radius.md,
+    borderCurve: 'continuous',
+    backgroundColor: theme.colors.neutral3,
+  },
+}));
+```
