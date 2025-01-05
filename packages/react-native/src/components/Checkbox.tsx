@@ -6,7 +6,7 @@ import { Icon, IconProps } from './Icon';
 import { useControllableState } from '@/hooks/useControllableState';
 import { genericForwardRef } from '@/utils/genericForwardRef';
 import type { PolymorphicProps } from '@/types/components';
-import type { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens';
 
 type CheckboxColor = Color;
 type CheckboxSize = 'sm' | 'md' | 'lg';

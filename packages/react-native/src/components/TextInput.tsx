@@ -11,7 +11,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { genericForwardRef } from '@/utils/genericForwardRef';
 import type { PolymorphicProps } from '@/types/components';
-import type { Color } from '@/styles/tokens/colors';
+import type { Color } from '@/styles/tokens';
 
 type TextInputContextValue = {
   size: 'sm' | 'md' | 'lg';

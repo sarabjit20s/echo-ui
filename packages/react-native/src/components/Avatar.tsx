@@ -12,7 +12,7 @@ import { Text, TextProps } from './Text';
 import { Icon, IconProps } from './Icon';
 import { genericForwardRef } from '@/utils/genericForwardRef';
 import type { PolymorphicProps } from '@/types/components';
-import type { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens';
 
 type AvatarColor = Color;
 type AvatarVariant = 'soft' | 'solid';

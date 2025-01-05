@@ -10,7 +10,7 @@ import Animated, {
 import Svg, { Circle } from 'react-native-svg';
 import { useStyles } from 'react-native-unistyles';
 
-import type { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 

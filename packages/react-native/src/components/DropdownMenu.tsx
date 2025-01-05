@@ -41,9 +41,9 @@ import {
   RadioGroupIndicator,
   useRadioGroup,
 } from './RadioGroup';
-import type { Color } from '@/styles/tokens/colors';
 import { genericForwardRef } from '@/utils/genericForwardRef';
-import { PolymorphicProps } from '@/types/components';
+import type { PolymorphicProps } from '@/types/components';
+import type { Color } from '@/styles/tokens';
 
 const animConfig = {
   duration: 200,

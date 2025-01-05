@@ -4,12 +4,12 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { genericForwardRef } from '@/utils/genericForwardRef';
 import type { PolymorphicProps } from '@/types/components';
-import type { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens';
 import {
   fontFamilies,
   type FontSize,
   type TextVariants,
-} from '@/styles/tokens/typography';
+} from '@/styles/tokens';
 
 type TextProps<T extends React.ElementType = typeof RNText> =
   PolymorphicProps<T> & {

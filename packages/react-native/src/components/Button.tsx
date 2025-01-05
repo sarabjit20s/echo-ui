@@ -6,7 +6,7 @@ import { Icon, IconProps } from './Icon';
 import { Text, TextProps } from './Text';
 import { genericForwardRef } from '@/utils/genericForwardRef';
 import type { PolymorphicProps } from '@/types/components';
-import type { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens';
 
 type ButtonColor = Color;
 type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';

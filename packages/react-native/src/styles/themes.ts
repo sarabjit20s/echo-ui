@@ -1,27 +1,35 @@
-import { lightThemeColors, darkThemeColors } from './tokens/colors';
-import { radius } from './tokens/radius';
-import { space } from './tokens/space';
-import { typography } from './tokens/typography';
+import {
+  lightThemeColors,
+  darkThemeColors,
+  radius,
+  space,
+  typography,
+} from './tokens';
 
-export const lightTheme = {
+export type Theme = {
+  colors: Record<keyof typeof lightThemeColors, string>;
+  radius: typeof radius;
+  space: typeof space;
+  typography: typeof typography;
+};
+
+export const lightTheme: Theme = {
   colors: lightThemeColors,
   radius,
   space,
   typography,
 } as const;
 
-export const darkTheme = {
+export const darkTheme: Theme = {
   colors: darkThemeColors,
   radius,
   space,
   typography,
-} as const;
+};
 
 export const themes = {
   light: lightTheme,
   dark: darkTheme,
 } as const;
 
-// every theme should have a same structure as lightTheme
-export type Theme = typeof lightTheme;
 export type Themes = typeof themes;

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { UnistylesRegistry } from 'react-native-unistyles';
 
-import { Breakpoints, breakpoints } from './breakpoints';
+import { Breakpoints, breakpoints } from './tokens';
 import { themes, Themes } from './themes';
 
 declare module 'react-native-unistyles' {

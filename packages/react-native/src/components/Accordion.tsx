@@ -19,7 +19,7 @@ import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { useControllableState } from '@/hooks/useControllableState';
 import { genericForwardRef } from '@/utils/genericForwardRef';
 import type { PolymorphicProps } from '@/types/components';
-import type { Color } from '@/styles/tokens/colors';
+import type { Color } from '@/styles/tokens';
 
 const animConfig = {
   duration: 200,

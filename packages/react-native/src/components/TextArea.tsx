@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import type { Color } from '@/styles/tokens/colors';
+import type { Color } from '@/styles/tokens';
 
 type TextAreaProps = RNTextInputProps & {
   color?: Color;

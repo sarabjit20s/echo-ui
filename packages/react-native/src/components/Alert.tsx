@@ -6,7 +6,7 @@ import { Text, TextProps } from './Text';
 import { Icon, IconProps } from './Icon';
 import { genericForwardRef } from '@/utils/genericForwardRef';
 import type { PolymorphicProps } from '@/types/components';
-import type { Color } from '@/styles/tokens/colors';
+import type { Color } from '@/styles/tokens';
 
 type AlertColor = Color;
 type AlertSize = 'sm' | 'md' | 'lg';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import Ionicons from '@react-native-vector-icons/ionicons';
 
-import type { Color, ColorStep } from '@/styles/tokens/colors';
+import type { Color, ColorStep } from '@/styles/tokens';
 
 type IconProps = Omit<
   React.ComponentPropsWithoutRef<typeof Ionicons>,
