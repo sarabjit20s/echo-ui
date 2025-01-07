@@ -1,0 +1,22 @@
+{
+  "name": "@echo-ui/registry",
+  "version": "1.0.0",
+  "description": "A registry of all components, hooks, utils and types",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts",
+    "./components": "./src/components.ts",
+    "./hooks": "./src/hooks.ts",
+    "./styles": "./src/styles.ts",
+    "./types": "./src/types.ts",
+    "./utils": "./src/utils.ts",
+    "./dependencies": "./src/dependencies.ts",
+    "./schema": "./src/schema.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}
