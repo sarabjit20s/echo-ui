@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "dirs": {
+      "type": "object",
+      "properties": {
+        "hooks": {
+          "type": "string"
+        },
+        "styles": {
+          "type": "string"
+        },
+        "types": {
+          "type": "string"
+        },
+        "ui": {
+          "type": "string"
+        },
+        "utils": {
+          "type": "string"
+        }
+      },
+      "required": ["hooks", "styles", "types", "ui", "utils"]
+    }
+  },
+  "required": ["dirs"]
+}
