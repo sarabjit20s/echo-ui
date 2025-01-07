@@ -1,0 +1,53 @@
+{
+  "name": "echo-ui",
+  "version": "1.0.0-beta.1",
+  "description": "Add components, hooks, styles and utils to your project",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "sarabjit20s",
+    "url": "https://github.com/sarabjit20s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sarabjit20s/echo-ui",
+    "directory": "packages/cli"
+  },
+  "license": "MIT",
+  "keywords": [
+    "components",
+    "react-native",
+    "expo",
+    "react-native-unistyles",
+    "unistyles"
+  ],
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": "./dist/index.js",
+  "bin": "./dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "pub:beta": "pnpm build && pnpm publish --tag beta",
+    "pub:latest": "pnpm build && pnpm publish"
+  },
+  "dependencies": {
+    "@echo-ui/registry": "workspace:*",
+    "@inquirer/prompts": "^7.2.1",
+    "chalk": "^5.4.1",
+    "commander": "^13.0.0",
+    "package-manager-detector": "^0.2.8",
+    "shelljs": "^0.8.5",
+    "yocto-spinner": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/shelljs": "^0.8.15",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
