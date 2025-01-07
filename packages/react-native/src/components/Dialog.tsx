@@ -20,7 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Text, TextProps } from './Text';
-import { Portal, PortalProps } from '@/utils/portal';
+import { Portal, PortalProps } from './Portal';
 import { useComposedRefs } from '@/utils/composeRefs';
 import { useControllableState } from '@/hooks/useControllableState';
 import { useInsets } from '@/hooks/useInsets';

@@ -13,7 +13,7 @@ import {
 import Svg, { Path } from 'react-native-svg';
 import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
-import { Portal, PortalProps } from '@/utils/portal';
+import { Portal, PortalProps } from './Portal';
 import { useComposedRefs } from '@/utils/composeRefs';
 import { useControllableState } from '@/hooks/useControllableState';
 import { usePositioning, Placement, ArrowData } from '@/hooks/usePositioning';
