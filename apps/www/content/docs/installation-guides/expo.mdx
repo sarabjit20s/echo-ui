@@ -1,0 +1,111 @@
+---
+title: Expo
+description: Install and configure dependencies for Expo
+---
+
+
+<Steps>
+
+
+<Step>
+### Create project
+
+<PackageRunner command="create-expo-app@latest" />
+
+</Step>
+
+
+<Step>
+### Configure path aliases
+
+1. Edit `tsconfig.json` file
+```json
+{
+  "compilerOptions": {
+    // ...
+    "paths": { // [!code highlight]
+      "@/*": ["./*"] // [!code highlight]
+    } // [!code highlight]
+    // ...
+  }
+}
+```
+
+</Step>
+
+
+<Step>
+### Configure fonts
+1. Download the Inter font from here: https://rsms.me/inter/
+2. Copy the `Inter-Regular.ttf`, `Inter-Medium.ttf`, `Inter-SemiBold.ttf`, `Inter-Bold.ttf` and `InterDisplay-ExtraBold.ttf` files from the `ttf` folder and paste them in the `assets/fonts` folder.
+3. Edit `app.json` file:
+```json
+{
+  "expo": {
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Inter-Regular.ttf", // [!code highlight]
+            "./assets/fonts/Inter-Medium.ttf",  // [!code highlight]
+            "./assets/fonts/Inter-SemiBold.ttf",    // [!code highlight]
+            "./assets/fonts/Inter-Bold.ttf",    // [!code highlight]
+            "./assets/fonts/InterDisplay-ExtraBold.ttf" // [!code highlight]
+          ]
+        }
+      ]
+    ]
+  }
+}
+
+```
+
+</Step>
+
+
+<Step>
+### Run the CLI
+
+<PackageRunner command="saaj init" />
+
+</Step>
+
+
+<Step>
+### Configure components.json
+You will be asked a few questions to configure `components.json`:
+
+```css
+- What should be the directory for components? > components/ui
+- What should be the directory for hooks? > hooks
+- What should be the directory for utils? > utils
+- What should be the directory for types? > types
+- What should be the directory for styles? > styles
+```
+</Step>
+
+
+<Step>
+### Run your application
+
+1. Generate native directories
+
+<PackageRunner command="expo prebuild --clean" />
+
+
+2. Build and start your application
+
+<PackageRunner command="expo run:ios" />
+
+</Step>
+
+
+<Step>
+### All Set!
+
+You can now start adding components to your app.
+</Step>
+
+
+</Steps>

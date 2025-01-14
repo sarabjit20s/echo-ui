@@ -1,0 +1,25 @@
+---
+title: Installation
+description: How to install dependencies and structure your app.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { InstallationGuideCard } from '@/components/installation-guide-card';
+import { ExpoIcon } from '@/components/icons/expo';
+import { ReactNativeIcon } from '@/components/icons/react-native';
+
+## Guides
+
+<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+<InstallationGuideCard href={'/docs/installation-guides/expo'}>
+<ExpoIcon />
+<p className="font-medium m-0">Expo</p>
+</InstallationGuideCard>
+
+<InstallationGuideCard href={'/docs/installation-guides/expo'}>
+<ReactNativeIcon />
+<p className="font-medium m-0">React Native</p>
+</InstallationGuideCard>
+
+</div>
