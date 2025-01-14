@@ -4,42 +4,11 @@ import path from 'path';
 import { registry } from '@echo-ui/registry';
 import {
   Registry,
+  RegistryItem,
   RegistryItemType,
   RegistryItemWithCode,
   RegistryWithCode,
 } from '@echo-ui/registry/schema';
-
-// for now we are getting the components from the local node_modules folder
-
-const componentsDirpath = path.join(
-  process.cwd(),
-  'node_modules',
-  '@echo-ui/react-native/src/components',
-);
-
-const hooksDirpath = path.join(
-  process.cwd(),
-  'node_modules',
-  '@echo-ui/react-native/src/hooks',
-);
-
-const typesDirpath = path.join(
-  process.cwd(),
-  'node_modules',
-  '@echo-ui/react-native/src/types',
-);
-
-const utilsDirpath = path.join(
-  process.cwd(),
-  'node_modules',
-  '@echo-ui/react-native/src/utils',
-);
-
-const stylesDirpath = path.join(
-  process.cwd(),
-  'node_modules',
-  '@echo-ui/react-native/src/styles',
-);
 
 const registryItemTypes: RegistryItemType[] = [
   'component',
@@ -131,7 +100,7 @@ function createRegistryWithCode(registry: Registry) {
   for (const item of registry) {
     const newItem: RegistryItemWithCode = {
       ...(item as any),
-      code: getCode(item.type, item.name),
+      code: getItemCode(item),
     };
 
     if (item.registryDependencies?.length) {
@@ -146,25 +115,36 @@ function createRegistryWithCode(registry: Registry) {
   return registryWithCode;
 }
 
-function getCode(type: RegistryItemType, name: string) {
-  let code = '';
-  switch (type) {
+function getItemCode(item: RegistryItem) {
+  let code: string;
+
+  const basePath = path.join(
+    process.cwd(),
+    'node_modules',
+    '@echo-ui/react-native/src',
+  );
+
+  switch (item.type) {
     case 'component':
-      code = fs.readFileSync(path.join(componentsDirpath, name), 'utf8');
+      code = fs.readFileSync(
+        path.join(basePath, 'components', item.name),
+        'utf8',
+      );
       break;
     case 'hook':
-      code = fs.readFileSync(path.join(hooksDirpath, name), 'utf8');
+      code = fs.readFileSync(path.join(basePath, 'hooks', item.name), 'utf8');
       break;
     case 'type':
-      code = fs.readFileSync(path.join(typesDirpath, name), 'utf8');
+      code = fs.readFileSync(path.join(basePath, 'types', item.name), 'utf8');
       break;
     case 'utility':
-      code = fs.readFileSync(path.join(utilsDirpath, name), 'utf8');
+      code = fs.readFileSync(path.join(basePath, 'utils', item.name), 'utf8');
       break;
     case 'style':
-      code = fs.readFileSync(path.join(stylesDirpath, name), 'utf8');
+      code = fs.readFileSync(path.join(basePath, 'styles', item.name), 'utf8');
       break;
     default:
+      code = '';
       break;
   }
   return code;
