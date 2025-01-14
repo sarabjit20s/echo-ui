@@ -5,6 +5,9 @@
     "dirs": {
       "type": "object",
       "properties": {
+        "components": {
+          "type": "string"
+        },
         "hooks": {
           "type": "string"
         },
@@ -14,14 +17,11 @@
         "types": {
           "type": "string"
         },
-        "ui": {
-          "type": "string"
-        },
         "utils": {
           "type": "string"
         }
       },
-      "required": ["hooks", "styles", "types", "ui", "utils"]
+      "required": ["components", "hooks", "styles", "types", "utils"]
     }
   },
   "required": ["dirs"]
