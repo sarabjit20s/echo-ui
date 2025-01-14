@@ -7,6 +7,16 @@ import {
 } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import Link from 'next/link';
+
+import { Steps, Step } from '@/components/steps';
+import { ItemManualInstallation } from '@/components/item-manual-installation';
+import { ComponentPreview } from '@/components/component-preview';
+import { PackageManager } from '@/components/package-manager';
+import { PackageRunner } from '@/components/package-runner';
+import { ItemInstallationDoc } from '@/components/item-installation-doc';
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -22,7 +32,22 @@ export default async function Page(props: {
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>
-        <MDX components={{ ...defaultMdxComponents }} />
+        <MDX
+          components={{
+            ...defaultMdxComponents,
+            Link,
+            Callout,
+            Steps,
+            Step,
+            Tab,
+            Tabs,
+            ItemManualInstallation,
+            ComponentPreview,
+            PackageManager,
+            PackageRunner,
+            ItemInstallationDoc,
+          }}
+        />
       </DocsBody>
     </DocsPage>
   );
