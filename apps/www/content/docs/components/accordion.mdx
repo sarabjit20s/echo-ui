@@ -3,37 +3,16 @@ title: Accordion
 description: A vertically stacked set of interactive headings that each reveal an associated section of content.
 ---
 
-import Link from 'next/link';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { ComponentPreview } from '@/components/component-preview';
-import { readComponentFile } from '@/lib/readFile';
 
 ## Preview
+
 <ComponentPreview name="Accordion" />
+
 
 ## Installation
 
-<Steps>
+<ItemInstallationDoc name="Accordion" />
 
-<Step>
-Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
-#### External Dependencies
-  - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
-</Step>
-
-<Step>
-Copy and paste the following code into `components/ui/Accordion.tsx`.
-<DynamicCodeBlock lang="tsx" code={readComponentFile('Accordion')} />
-</Step>
-
-<Step>
-Update the import paths to match your project setup.
-</Step>
-
-</Steps>
 
 ## Usage
 
@@ -50,46 +29,26 @@ import {
 import { Icon } from '@/components/ui/Icon';
 import { Text } from '@/components/ui/Text';
 
-const content = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua';
-
-const data = [
-  {
-    id: '1',
-    title: 'Accordion 1',
-    content,
-  },
-  {
-    id: '2',
-    title: 'Accordion 2',
-    content,
-  },
-  {
-    id: '3',
-    title: 'Accordion 3',
-    content,
-  },
-];
 
 export function MyAccordion() {
   return (
     <Accordion>
-      {data.map(({ id, title, content }) => {
-        return (
-          <AccordionItem key={id} value={id}>
-            <AccordionTrigger>
-              <Text variant="labelMd" highContrast>
-                {title}
-              </Text>
-              <AccordionIndicator>
-                <Icon name={'chevron-down'} />
-              </AccordionIndicator>
-            </AccordionTrigger>
-            <AccordionContent>
-              <Text variant="bodySm">{content}</Text>
-            </AccordionContent>
-          </AccordionItem>
-        );
-      })}
+      <AccordionItem>
+        <AccordionTrigger>
+          <Text variant="labelMd" highContrast>
+            What is Lorem Ipsum?
+          </Text>
+          <AccordionIndicator>
+            <Icon name={'chevron-down'} />
+          </AccordionIndicator>
+        </AccordionTrigger>
+        <AccordionContent>
+          <Text variant="bodySm">
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry.
+          </Text>
+        </AccordionContent>
+      </AccordionItem>
     </Accordion>
   );
 }

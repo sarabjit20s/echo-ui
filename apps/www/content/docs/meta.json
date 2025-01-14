@@ -1,10 +1,14 @@
 {
-  "title": "EchoUI",
-  "description": "A collection of pre-built, high-quality React Native components designed to accelerate your mobile app development.",
+  "title": "A collection of beautiful UI components for React Native",
+  "description": "A collection of beautiful UI components for React Native",
   "root": true,
   "pages": [
-    "---Guide---",
+    "---Getting Started---",
     "index",
+    "installation",
+    "---Installation Guides---",
+    "installation-guides/expo",
+    "installation-guides/react-native",
     "---Components---",
     "...components",
     "---Hooks---",

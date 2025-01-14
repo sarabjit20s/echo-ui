@@ -3,37 +3,16 @@ title: Collapsible
 description: A component that allows the user to expand or collapse content.
 ---
 
-import Link from 'next/link';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { ComponentPreview } from '@/components/component-preview';
-import { readComponentFile } from '@/lib/readFile';
 
 ## Preview
+
 <ComponentPreview name="Collapsible" />
+
 
 ## Installation
 
-<Steps>
+<ItemInstallationDoc name="Collapsible" />
 
-<Step>
-Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
-#### External Dependencies
-  - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
-</Step>
-
-<Step>
-Copy and paste the following code into `components/ui/Collapsible.tsx`.
-<DynamicCodeBlock lang="tsx" code={readComponentFile('Collapsible')} />
-</Step>
-
-<Step>
-Update the import paths to match your project setup.
-</Step>
-
-</Steps>
 
 ## Usage
 

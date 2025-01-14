@@ -3,41 +3,16 @@ title: Popup
 description: A primitive component for creating popups like a popover or dropdown-menu.
 ---
 
-import Link from 'next/link';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { ComponentPreview } from '@/components/component-preview';
-import { readComponentFile } from '@/lib/readFile';
 
 ## Preview
+
 <ComponentPreview name="Popup" />
+
 
 ## Installation
 
-<Steps>
+<ItemInstallationDoc name="Popup" />
 
-<Step>
-Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/utils/portal'}>Portal</Link>
-  - <Link href={'/docs/hooks/useControllableState'}>useControllableState</Link>
-  - <Link href={'/docs/hooks/useInsets'}>useInsets</Link>
-  - <Link href={'/docs/hooks/usePositioning'}>usePositioning</Link>
-  - <Link href={'/docs/hooks/useScreenDimensions'}>useScreenDimensions</Link>
-#### External Dependencies
-  - [React Native Svg](https://github.com/software-mansion/react-native-svg)
-</Step>
-
-<Step>
-Copy and paste the following code into `components/ui/Popup.tsx`.
-<DynamicCodeBlock lang="tsx" code={readComponentFile('Popup')} />
-</Step>
-
-<Step>
-Update the import paths to match your project setup.
-</Step>
-
-</Steps>
 
 ## Usage
 

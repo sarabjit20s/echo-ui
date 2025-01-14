@@ -1,0 +1,48 @@
+---
+title: Portal
+description: A component that renders its children into a different part of the app. Useful for creating modal dialogs, tooltips, or other overlaying elements.
+---
+
+
+## Installation
+
+<ItemInstallationDoc name="Portal" />
+
+
+## Setup
+
+**Wrap your app with `PortalProvider` component.**
+
+```tsx title="app/_layout.tsx"
+import { PortalProvider } from '@/components/Portal';
+
+export default function RootLayout() {
+  return (
+    <PortalProvider>
+      {/* Your app */}
+    </PortalProvider>
+  )
+}
+```
+
+
+
+## Usage
+
+```tsx title="MyComponent.tsx"
+import React from 'react';
+import { View } from 'react-native';
+
+import { Portal } from '@/components/Portal';
+
+export function MyComponent() {
+
+    return (
+        <View>
+            <Portal>
+                {/* Your portal content */}
+            </Portal>
+        </View>
+    )
+}
+```

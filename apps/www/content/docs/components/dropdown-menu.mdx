@@ -3,42 +3,16 @@ title: Dropdown Menu
 description: Displays a menu to the user that allows them to perform actions.
 ---
 
-import Link from 'next/link';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { ComponentPreview } from '@/components/component-preview';
-import { readComponentFile } from '@/lib/readFile';
 
 ## Preview
+
 <ComponentPreview name="DropdownMenu" />
+
 
 ## Installation
 
-<Steps>
+<ItemInstallationDoc name="DropdownMenu" />
 
-<Step>
-Make sure you have installed the following dependencies:
-#### Internal Dependencies
-  - <Link href={'/docs/components/checkbox'}>Checkbox</Link>
-  - <Link href={'/docs/components/icon'}>Icon</Link>
-  - <Link href={'/docs/components/popup'}>Popup</Link>
-  - <Link href={'/docs/components/radio-group'}>Radio Group</Link>
-  - <Link href={'/docs/components/separator'}>Separator</Link>
-  - <Link href={'/docs/components/text'}>Text</Link>
-#### External Dependencies
-  - [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started)
-</Step>
-
-<Step>
-Copy and paste the following code into `components/ui/DropdownMenu.tsx`.
-<DynamicCodeBlock lang="tsx" code={readComponentFile('DropdownMenu')} />
-</Step>
-
-<Step>
-Update the import paths to match your project setup.
-</Step>
-
-</Steps>
 
 ## Usage
 
