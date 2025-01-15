@@ -5,7 +5,7 @@ import yoctoSpinner from 'yocto-spinner';
 import { input } from '@inquirer/prompts';
 
 import { install } from '@/src/utils/install';
-import { addRegistryItems, getRegistryItems } from '@/src/utils/registry';
+import { addRegistryItems, fetchRegistryItems } from '@/src/utils/registry';
 import {
   DEFAULT_HOOKS_DIR_PATH,
   DEFAULT_STYLES_DIR_PATH,
@@ -89,31 +89,31 @@ export async function promptProjectConfig(): Promise<ProjectConfig> {
   }
   // path for `components` dir
   const components = await input({
-    message: `What should be the directory for ${chalk.cyan('components')}?`,
+    message: `Where would you like to keep your ${chalk.cyan('components')}?`,
     default: DEFAULT_COMPONENTS_DIR_PATH,
   });
 
   // path for `hooks` dir
   const hooks = await input({
-    message: `What should be the directory for ${chalk.cyan('hooks')}?`,
+    message: `Where would you like to keep your ${chalk.cyan('hooks')}?`,
     default: DEFAULT_HOOKS_DIR_PATH,
   });
 
   // path for `utils` dir
   const utils = await input({
-    message: `What should be the directory for ${chalk.cyan('utils')}?`,
+    message: `Where would you like to keep your ${chalk.cyan('utils')}?`,
     default: DEFAULT_UTILS_DIR_PATH,
   });
 
   // path for `styles` dir
   const styles = await input({
-    message: `What should be the directory for ${chalk.cyan('styles')}?`,
+    message: `Where would you like to keep your ${chalk.cyan('themes configuration')}?`,
     default: DEFAULT_STYLES_DIR_PATH,
   });
 
   // path for `types` dir
   const types = await input({
-    message: `What should be the directory for ${chalk.cyan('types')}?`,
+    message: `Where would you like to keep your ${chalk.cyan('types')}?`,
     default: DEFAULT_TYPES_DIR_PATH,
   });
 
@@ -139,7 +139,7 @@ export async function configureTypes() {
 
   // we can even pass a file name without extension
   const files = ['components.ts'];
-  const items = await getRegistryItems(files, 'type');
+  const items = await fetchRegistryItems(files, 'type');
 
   await addRegistryItems(items);
 
@@ -151,8 +151,9 @@ export async function configureStyles() {
     text: 'Configuring styles...',
   }).start();
 
-  const files = ['unistyles.ts'];
-  const items = await getRegistryItems(files, 'style');
+  // these are the required files to setup themes and unistyles
+  const files = ['tokens.ts', 'themes.ts', 'unistyles.ts'];
+  const items = await fetchRegistryItems(files, 'style');
 
   await addRegistryItems(items);
 
@@ -166,7 +167,7 @@ export async function configureUtils() {
 
   // these are the required utils
   const files = ['composeRefs.ts', 'genericForwardRef.ts'];
-  const items = await getRegistryItems(files, 'utility');
+  const items = await fetchRegistryItems(files, 'utility');
 
   await addRegistryItems(items);
 
@@ -180,7 +181,7 @@ export async function configureHooks() {
 
   // these are the required hooks
   const files = ['useControllableState.ts'];
-  const items = await getRegistryItems(files, 'hook');
+  const items = await fetchRegistryItems(files, 'hook');
 
   await addRegistryItems(items);
 

@@ -5,6 +5,9 @@ import { init } from '@/src/commands/init';
 import { add } from '@/src/commands/add';
 import packageJson from '../package.json';
 
+process.on('SIGINT', () => process.exit(0));
+process.on('SIGTERM', () => process.exit(0));
+
 async function main() {
   const program = new Command()
     .name(packageJson.name)

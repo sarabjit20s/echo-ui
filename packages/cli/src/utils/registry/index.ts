@@ -14,7 +14,7 @@ import { getPackageJson } from '../get-package-json';
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://saaj-ui.vercel.app';
 
-export async function getRegistryItems(
+export async function fetchRegistryItems(
   names: string[],
   type?: RegistryItemType,
 ) {
@@ -32,6 +32,13 @@ export async function getRegistryItems(
   return data as RegistryWithCode;
 }
 
+/**
+ * Adds registry items to the project by writing their code to the respective directories.
+ *
+ * @param {RegistryWithCode} registry The list of registry items to add.
+ * @param {ProjectConfig} [projectConfig] The project configuration. If not provided, it will be fetched from the `components.json` file.
+ * @returns {Promise<void>}
+ */
 export async function addRegistryItems(
   registry: RegistryWithCode,
   projectConfig?: ProjectConfig,
@@ -48,6 +55,13 @@ export async function addRegistryItems(
   }
 }
 
+/**
+ * Adds a registry item to the project by writing its code to the respective directory.
+ *
+ * @param {RegistryItemWithCode} item The registry item to add.
+ * @param {ProjectConfig} config The project configuration.
+ * @returns {Promise<void>}
+ */
 export async function addRegistryItem(
   item: RegistryItemWithCode,
   config: ProjectConfig,
@@ -102,11 +116,6 @@ export async function addRegistryItem(
 
       spinner.success();
     }
-  }
-
-  // add registry dependencies
-  if (item.registryDependencies?.length) {
-    await addRegistryItems(item.registryDependencies);
   }
 
   // write file

@@ -6,7 +6,7 @@ import {
   getProjectConfig,
   isValidProjectConfig,
 } from '../utils/get-project-config';
-import { addRegistryItems, getRegistryItems } from '../utils/registry';
+import { addRegistryItems, fetchRegistryItems } from '../utils/registry';
 import { isPackageJsonExists } from '../utils/get-package-json';
 
 export const add = new Command()
@@ -38,7 +38,7 @@ export const add = new Command()
 
     const itemsType = getItemsType(options);
 
-    const registryItems = await getRegistryItems(items, itemsType);
+    const registryItems = await fetchRegistryItems(items, itemsType);
 
     await addRegistryItems(registryItems, projectConfig);
   });

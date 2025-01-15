@@ -1,6 +1,6 @@
 {
-  "name": "saaj",
-  "version": "1.0.0-beta.2",
+  "name": "saaj-ui",
+  "version": "1.0.0-beta.3",
   "description": "Add components, hooks, types and utilities to your project",
   "publishConfig": {
     "access": "public"
