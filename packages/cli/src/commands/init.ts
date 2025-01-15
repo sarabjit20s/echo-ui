@@ -10,7 +10,7 @@ import {
   DEFAULT_HOOKS_DIR_PATH,
   DEFAULT_STYLES_DIR_PATH,
   DEFAULT_TYPES_DIR_PATH,
-  DEFAULT_UI_DIR_PATH,
+  DEFAULT_COMPONENTS_DIR_PATH,
   DEFAULT_UTILS_DIR_PATH,
   ProjectConfig,
   PROJECT_CONFIG_SCHEMA_URL,
@@ -87,10 +87,10 @@ export async function promptProjectConfig(): Promise<ProjectConfig> {
       return projectConfig;
     }
   }
-  // path for `ui` dir
-  const ui = await input({
-    message: `What should be the directory for ${chalk.cyan('ui')}?`,
-    default: DEFAULT_UI_DIR_PATH,
+  // path for `components` dir
+  const components = await input({
+    message: `What should be the directory for ${chalk.cyan('components')}?`,
+    default: DEFAULT_COMPONENTS_DIR_PATH,
   });
 
   // path for `hooks` dir
@@ -120,10 +120,10 @@ export async function promptProjectConfig(): Promise<ProjectConfig> {
   const config: ProjectConfig = {
     $schema: PROJECT_CONFIG_SCHEMA_URL,
     dirs: {
+      components,
       hooks,
       styles,
       types,
-      ui,
       utils,
     },
   };

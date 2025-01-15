@@ -1,5 +1,5 @@
 {
-  "name": "echo-ui",
+  "name": "saaj",
   "version": "1.0.0-beta.1",
   "description": "Add components, hooks, styles and utils to your project",
   "publishConfig": {
@@ -32,8 +32,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "pub:beta": "pnpm build && pnpm publish --tag beta",
-    "pub:latest": "pnpm build && pnpm publish"
+    "pub:beta": "pnpm build && pnpm publish --no-git-checks --access public --tag beta",
+    "pub:latest": "pnpm build && pnpm publish --no-git-checks --access public"
   },
   "dependencies": {
     "@echo-ui/registry": "workspace:*",

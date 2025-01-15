@@ -1,9 +1,9 @@
 import shell from 'shelljs';
 
-import { getPackageManager } from './get-package-manager.js';
+import { getPackageManager } from './get-package-manager';
 
 /**
- * Install given dependencies using the detected package manager.
+ * Install given dependencies using the detected package manager or package runner.
  */
 export async function install(...dependencies: string[]) {
   const pm = await getPackageManager();

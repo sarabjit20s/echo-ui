@@ -12,7 +12,7 @@ import { getProjectConfig, ProjectConfig } from '../get-project-config';
 import { install, installDev } from '../install';
 import { getPackageJson } from '../get-package-json';
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://echo-ui.vercel.app';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://saaj-ui.vercel.app';
 
 export async function getRegistryItems(
   names: string[],
@@ -118,7 +118,7 @@ export async function addRegistryItem(
 function getDirpath(itemType: RegistryItemType, config: ProjectConfig) {
   switch (itemType) {
     case 'component':
-      return config.dirs.ui;
+      return config.dirs.components;
     case 'hook':
       return config.dirs.hooks;
     case 'style':
