@@ -10,6 +10,7 @@ import { ItemManualInstallation } from './item-manual-installation';
 export type ItemInstallationDocProps = {
   name: string;
 };
+
 export function ItemInstallationDoc({ name }: ItemInstallationDocProps) {
   return (
     <Tabs defaultValue="cli">
@@ -19,7 +20,7 @@ export function ItemInstallationDoc({ name }: ItemInstallationDocProps) {
       </TabsList>
 
       <TabsContent value="cli">
-        <PackageRunner command={`saaj add ${name}`} />
+        <PackageRunner command={`saaj-ui add ${name}`} />
       </TabsContent>
 
       <TabsContent value="manual">
