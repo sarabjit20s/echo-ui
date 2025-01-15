@@ -1,14 +1,7 @@
 import { NextRequest } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import { registry } from '@saaj-ui/registry';
-import {
-  Registry,
-  RegistryItem,
-  RegistryItemType,
-  RegistryItemWithCode,
-  RegistryWithCode,
-} from '@saaj-ui/registry/schema';
+import { Registry, RegistryItemType } from '@saaj-ui/registry/schema';
+import { getRegistryItemsWithCode } from '@saaj-ui/registry/utils/get-registry-items-with-code';
 
 const registryItemTypes: RegistryItemType[] = [
   'component',
@@ -27,7 +20,7 @@ export async function GET(request: NextRequest) {
     if (names.length === 0) {
       return Response.json(
         {
-          error: 'A list of item names must be provided in the query string',
+          error: 'A list of item `names` must be provided in the query string',
         },
         {
           status: 400,
@@ -82,70 +75,19 @@ export async function GET(request: NextRequest) {
       return aLength - bLength;
     });
 
-    const registryWithCode = createRegistryWithCode(sortedItems);
+    const result = getRegistryItemsWithCode(sortedItems);
 
-    return Response.json(registryWithCode);
+    return Response.json(result);
   } catch (error) {
     console.error('Error fetching registry items:', error);
     return Response.json(
-      { error: 'Error fetching registry items' },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Error fetching registry items',
+      },
       { status: 500 },
     );
   }
-}
-
-function createRegistryWithCode(registry: Registry) {
-  const registryWithCode: RegistryWithCode = [];
-
-  for (const item of registry) {
-    const newItem: RegistryItemWithCode = {
-      ...(item as any),
-      code: getItemCode(item),
-    };
-
-    if (item.registryDependencies?.length) {
-      const registry = createRegistryWithCode(item.registryDependencies);
-
-      newItem.registryDependencies = registry;
-    }
-
-    registryWithCode.push(newItem);
-  }
-
-  return registryWithCode;
-}
-
-function getItemCode(item: RegistryItem) {
-  let code: string;
-
-  const basePath = path.join(
-    process.cwd(),
-    'node_modules',
-    '@saaj-ui/react-native/src',
-  );
-
-  switch (item.type) {
-    case 'component':
-      code = fs.readFileSync(
-        path.join(basePath, 'components', item.name),
-        'utf8',
-      );
-      break;
-    case 'hook':
-      code = fs.readFileSync(path.join(basePath, 'hooks', item.name), 'utf8');
-      break;
-    case 'type':
-      code = fs.readFileSync(path.join(basePath, 'types', item.name), 'utf8');
-      break;
-    case 'utility':
-      code = fs.readFileSync(path.join(basePath, 'utils', item.name), 'utf8');
-      break;
-    case 'style':
-      code = fs.readFileSync(path.join(basePath, 'styles', item.name), 'utf8');
-      break;
-    default:
-      code = '';
-      break;
-  }
-  return code;
 }
