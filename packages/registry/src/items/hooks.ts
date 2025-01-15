@@ -1,4 +1,4 @@
-import { Registry, RegistryItem } from './schema';
+import { Registry, RegistryItem } from '../schema';
 
 // Write hooks in
 // - `lower to higher registryDependencies` order

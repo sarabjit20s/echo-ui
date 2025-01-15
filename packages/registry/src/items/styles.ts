@@ -1,4 +1,4 @@
-import { Registry, RegistryItem } from './schema';
+import { Registry, RegistryItem } from '../schema';
 
 // Write styles in
 // - `lower to higher registryDependencies` order

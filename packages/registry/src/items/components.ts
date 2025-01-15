@@ -1,5 +1,5 @@
-import { Registry, RegistryItem } from './schema';
-import { componentsTypes } from './types';
+import { Registry, RegistryItem } from '../schema';
+import { components as componentsTypes } from './types';
 import { composeRefs, genericForwardRef } from './utils';
 import { tokens } from './styles';
 import {

@@ -8,15 +8,23 @@
   "license": "MIT",
   "exports": {
     ".": "./src/index.ts",
-    "./components": "./src/components.ts",
-    "./hooks": "./src/hooks.ts",
-    "./styles": "./src/styles.ts",
-    "./types": "./src/types.ts",
-    "./utils": "./src/utils.ts",
+    "./components": "./src/items/components.ts",
+    "./hooks": "./src/items/hooks.ts",
+    "./styles": "./src/items/styles.ts",
+    "./types": "./src/items/types.ts",
+    "./utils": "./src/items/utils.ts",
     "./dependencies": "./src/dependencies.ts",
-    "./schema": "./src/schema.ts"
+    "./schema": "./src/schema.ts",
+    "./utils/get-registry-items-with-code": "./src/utils/get-registry-items-with-code.ts"
+  },
+  "scripts": {
+    "build:registry": "pnpm dlx ts-node ./src/scripts/build-registry-with-code.ts && prettier --write ./src/registry-with-code.ts"
+  },
+  "dependencies": {
+    "@saaj-ui/react-native": "workspace:*"
   },
   "devDependencies": {
+    "@types/node": "22.10.2",
     "typescript": "^5.7.3"
   }
 }

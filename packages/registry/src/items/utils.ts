@@ -1,4 +1,4 @@
-import { Registry, RegistryItem } from './schema';
+import { Registry, RegistryItem } from '../schema';
 
 // Write utils in
 // - `lower to higher registryDependencies` order

@@ -17,12 +17,8 @@ export type RegistryItem = {
   registryDependencies?: RegistryItem[];
 };
 
-export type RegistryItemWithCode = Omit<
-  RegistryItem,
-  'registryDependencies'
-> & {
+export type RegistryItemWithCode = RegistryItem & {
   code: string;
-  registryDependencies?: RegistryItemWithCode[];
 };
 
 export type Registry = RegistryItem[];
