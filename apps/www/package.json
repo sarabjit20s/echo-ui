@@ -13,7 +13,6 @@
     "@radix-ui/react-collapsible": "^1.1.2",
     "@radix-ui/react-slot": "^1.1.1",
     "@radix-ui/react-tabs": "^1.1.2",
-    "@saaj-ui/react-native": "workspace:*",
     "@saaj-ui/registry": "workspace:*",
     "@vercel/analytics": "^1.4.1",
     "class-variance-authority": "^0.7.1",
