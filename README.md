@@ -1,9 +1,9 @@
-# Echo UI
+# Saaj UI
 
-**EchoUI** is a collection of pre-built, high-quality React Native components designed to accelerate your mobile app development. Components are designed to deliver smooth and efficient performance on both Android and iOS. All components are made with [`react-native-unistyles`](https://www.unistyl.es/).
+A collection of beautifully designed, accessible React Native components to speed up your app development. Copy, paste, and customize the code to fit your app, just pure flexibility and control. Perfect for crafting stunning mobile apps with ease.
 
 ## Documentation
-Visit [Echo UI](https://echo-ui.vercel.app/) to view the documentation.
+Visit [Saaj UI](https://saaj-ui.vercel.app/) to view the documentation.
 
 ## Contributing
 Please read the [contributing guide](/CONTRIBUTING.md).

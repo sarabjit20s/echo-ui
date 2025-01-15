@@ -1,14 +1,14 @@
 import { NextRequest } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { registry } from '@echo-ui/registry';
+import { registry } from '@saaj-ui/registry';
 import {
   Registry,
   RegistryItem,
   RegistryItemType,
   RegistryItemWithCode,
   RegistryWithCode,
-} from '@echo-ui/registry/schema';
+} from '@saaj-ui/registry/schema';
 
 const registryItemTypes: RegistryItemType[] = [
   'component',
@@ -121,7 +121,7 @@ function getItemCode(item: RegistryItem) {
   const basePath = path.join(
     process.cwd(),
     'node_modules',
-    '@echo-ui/react-native/src',
+    '@saaj-ui/react-native/src',
   );
 
   switch (item.type) {

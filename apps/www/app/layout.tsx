@@ -6,9 +6,9 @@ import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
-  title: 'Echo UI',
+  title: 'Saaj UI',
   description:
-    'A collection of pre-built, high-quality React Native components designed to accelerate your mobile app development.',
+    'A collection of beautifully designed, accessible React Native components to speed up your app development.',
   keywords: [
     'React Native',
     'React Native UI Library',

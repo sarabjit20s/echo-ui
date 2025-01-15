@@ -1,5 +1,5 @@
 {
-  "name": "@echo-ui/registry",
+  "name": "@saaj-ui/registry",
   "version": "1.0.0",
   "description": "A registry of all components, hooks, utils and types",
   "publishConfig": {
@@ -17,6 +17,6 @@
     "./schema": "./src/schema.ts"
   },
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   }
 }

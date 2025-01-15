@@ -1,7 +1,7 @@
 {
-  "name": "@echo-ui/react-native",
+  "name": "@saaj-ui/react-native",
   "version": "0.0.0",
-  "description": "A collection of pre-built, high-quality React Native components designed to accelerate your mobile app development.",
+  "description": "A collection of beautifully designed, accessible React Native components to speed up your app development.",
   "private": true,
   "publishConfig": {
     "access": "public"
@@ -10,21 +10,21 @@
     "./*": "./*"
   },
   "devDependencies": {
-    "@echo-ui/eslint-config": "workspace:*",
-    "@echo-ui/typescript-config": "workspace:*",
     "@radix-ui/colors": "^3.0.0",
     "@react-native-vector-icons/common": "^11.0.0",
     "@react-native-vector-icons/ionicons": "^7.4.0",
-    "@react-native/typescript-config": "^0.76.5",
+    "@react-native/typescript-config": "^0.76.6",
+    "@saaj-ui/eslint-config": "workspace:*",
+    "@saaj-ui/typescript-config": "workspace:*",
     "@types/jest": "^29.5.14",
     "@types/react": "18.3.12",
     "@types/react-native": "^0.73.0",
     "@types/react-native-vector-icons": "^6.4.18",
     "@types/react-test-renderer": "^19.0.0",
     "react": "18.3.1",
-    "react-native": "^0.76.5",
-    "react-native-reanimated": "^3.16.5",
-    "react-native-svg": "^15.10.1",
+    "react-native": "^0.76.6",
+    "react-native-reanimated": "^3.16.7",
+    "react-native-svg": "^15.11.1",
     "react-native-unistyles": "^2.20.0"
   }
 }

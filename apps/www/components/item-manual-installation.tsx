@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { registry } from '@echo-ui/registry';
-import { RegistryItem } from '@echo-ui/registry/schema';
+import { registry } from '@saaj-ui/registry';
+import { RegistryItem } from '@saaj-ui/registry/schema';
 
 import { Steps, Step } from './steps';
 
@@ -110,7 +110,7 @@ function getItemCode(item: RegistryItem) {
   const basePath = path.join(
     process.cwd(),
     'node_modules',
-    '@echo-ui/react-native/src',
+    '@saaj-ui/react-native/src',
   );
 
   switch (item.type) {

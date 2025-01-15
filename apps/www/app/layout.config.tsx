@@ -15,11 +15,11 @@ export const baseOptions: BaseLayoutProps = {
       <div className="flex flex-row gap-2 items-center">
         <Logo size="sm" />
         <span className="font-medium [.uwu_&]:hidden [header_&]:text-[15px]">
-          Echo UI
+          Saaj UI
         </span>
       </div>
     ),
-    transparentMode: 'top',
+    transparentMode: 'always',
   },
   links: [
     {
@@ -33,5 +33,5 @@ export const baseOptions: BaseLayoutProps = {
       active: 'nested-url',
     },
   ],
-  githubUrl: 'https://github.com/sarabjit20s/echo-ui',
+  githubUrl: 'https://github.com/sarabjit20s/saaj-ui',
 };

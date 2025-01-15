@@ -13,13 +13,13 @@ export default function HomePage() {
 
 function Hero() {
   return (
-    <div className="flex flex-col gap-4 items-center text-center max-w-2xl">
-      <h1 className="text-4xl font-bold tracking-tight text-fd-foreground sm:text-5xl md:text-6xl">
-        Your building blocks for stunning mobile apps.
+    <div className="flex flex-col gap-8 items-center text-center max-w-2xl">
+      <h1 className="text-4xl font-medium tracking-tight text-fd-foreground sm:text-5xl md:text-6xl md:leading-[1.1]">
+        Build Stunning React Native Apps Faster
       </h1>
       <p className="text-lg text-fd-muted-foreground md:text-xl">
-        A collection of reusable React Native components to speed up your
-        development.
+        A collection of beautifully designed, accessible components, just pure
+        flexibility and control.
       </p>
       <div className="flex flex-row gap-2 items-center justify-center">
         <Button size="lg" asChild>
@@ -28,7 +28,7 @@ function Hero() {
           </Link>
         </Button>
         <Button size="lg" variant="secondary" asChild>
-          <Link href="https://github.com/sarabjit20s/echo-ui">
+          <Link href="https://github.com/sarabjit20s/saaj-ui">
             <Github /> Github
           </Link>
         </Button>

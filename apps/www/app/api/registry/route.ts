@@ -1,4 +1,4 @@
-import { registry } from '@echo-ui/registry';
+import { registry } from '@saaj-ui/registry';
 
 export async function GET() {
   try {

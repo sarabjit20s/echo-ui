@@ -5,7 +5,7 @@ import {
   RegistryItemType,
   RegistryItemWithCode,
   RegistryWithCode,
-} from '@echo-ui/registry/src/schema';
+} from '@saaj-ui/registry/src/schema';
 import yoctoSpinner from 'yocto-spinner';
 
 import { getProjectConfig, ProjectConfig } from '../get-project-config';
