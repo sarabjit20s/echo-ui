@@ -58,7 +58,6 @@ description: Install and configure dependencies for Expo
     ]
   }
 }
-
 ```
 
 </Step>
@@ -77,14 +76,49 @@ description: Install and configure dependencies for Expo
 You will be asked a few questions to configure `components.json`:
 
 ```css
-- What should be the directory for components? > components/ui
-- What should be the directory for hooks? > hooks
-- What should be the directory for utils? > utils
-- What should be the directory for types? > types
-- What should be the directory for styles? > styles
+- Where would you like to keep your components? > components/ui
+- Where would you like to keep your hooks? > hooks
+- Where would you like to keep your utils? > utils
+- Where would you like to keep your types? > types
+- Where would you like to keep your themes configuration? > styles
 ```
 </Step>
 
+<Step>
+### Setup Icons
+1. Add `Icon` component.
+<PackageRunner command="saaj-ui add Icon" />
+
+2. In your `app.json` file, add the following line:
+```json
+{
+  "expo": {
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            // ...
+            "./node_modules/@react-native-vector-icons/ionicons/fonts/Ionicons.ttf" // [!code highlight]
+          ]
+        }
+      ]
+    ]
+  }
+}
+```
+</Step>
+
+
+<Step>
+### Import Unistyles
+
+Import `unistyles.ts` file in the root file of your project.
+```tsx title="app/_layout.tsx"
+import "@/styles/unistyles";
+```
+
+</Step>
 
 <Step>
 ### Run your application
