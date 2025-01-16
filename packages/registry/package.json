@@ -5,26 +5,37 @@
   "publishConfig": {
     "access": "public"
   },
+  "author": {
+    "name": "sarabjit20s",
+    "url": "https://github.com/sarabjit20s"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sarabjit20s/saaj-ui",
+    "directory": "packages/registry"
+  },
   "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./components": "./src/items/components.ts",
-    "./hooks": "./src/items/hooks.ts",
-    "./styles": "./src/items/styles.ts",
-    "./types": "./src/items/types.ts",
-    "./utils": "./src/items/utils.ts",
-    "./dependencies": "./src/dependencies.ts",
-    "./schema": "./src/schema.ts",
-    "./utils/get-registry-items-with-code": "./src/utils/get-registry-items-with-code.ts"
+    "default": "./dist/index.js",
+    "types": "./dist/index.d.ts"
   },
   "scripts": {
-    "build:registry": "pnpm dlx ts-node ./src/scripts/build-registry-with-code.ts && prettier --write ./src/registry-with-code.ts"
-  },
-  "dependencies": {
-    "@saaj-ui/react-native": "workspace:*"
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "build:registry": "pnpm dlx ts-node ./src/scripts/build-registry-with-code.ts && prettier --write ./src/registry-with-code.ts",
+    "pub:beta": "pnpm build && pnpm publish --no-git-checks --access public --tag beta",
+    "pub:latest": "pnpm build && pnpm publish --no-git-checks --access public"
   },
   "devDependencies": {
+    "@saaj-ui/react-native": "workspace:*",
     "@types/node": "22.10.2",
+    "tsup": "^8.3.5",
     "typescript": "^5.7.3"
   }
 }
