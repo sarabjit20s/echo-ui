@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { Steps, Step } from '@/components/steps';
 import { ItemManualInstallation } from '@/components/item-manual-installation';
 import { ComponentPreview } from '@/components/component-preview';
-import { PackageManager } from '@/components/package-manager';
+import { PackageInstaller } from '@/components/package-installer';
 import { PackageRunner } from '@/components/package-runner';
 import { ItemInstallationDoc } from '@/components/item-installation-doc';
 
@@ -43,7 +43,7 @@ export default async function Page(props: {
             Tabs,
             ItemManualInstallation,
             ComponentPreview,
-            PackageManager,
+            PackageInstaller,
             PackageRunner,
             ItemInstallationDoc,
           }}
