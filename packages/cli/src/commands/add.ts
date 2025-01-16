@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { RegistryItemType } from '@saaj-ui/registry/src/schema';
+import { RegistryItemType } from '@saaj-ui/registry';
 
 import {
   getProjectConfig,
