@@ -20,7 +20,7 @@ export function ItemInstallationDoc({ name }: ItemInstallationDocProps) {
       </TabsList>
 
       <TabsContent value="cli">
-        <PackageRunner command={`saaj-ui add ${name}`} />
+        <PackageRunner command={`saaj add ${name}`} />
       </TabsContent>
 
       <TabsContent value="manual">

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { DynamicCodeBlock } from 'fumadocs-ui/components/dynamic-codeblock';
-import { registryWithCode } from '@saaj-ui/registry';
-import { RegistryItem } from '@saaj-ui/registry/schema';
+import { registryWithCode, RegistryItem } from '@saaj-ui/registry';
 
 import { Steps, Step } from './steps';
 

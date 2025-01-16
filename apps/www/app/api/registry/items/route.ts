@@ -1,7 +1,10 @@
 import { NextRequest } from 'next/server';
-import { registry } from '@saaj-ui/registry';
-import { Registry, RegistryItemType } from '@saaj-ui/registry/schema';
-import { getRegistryItemsWithCode } from '@saaj-ui/registry/utils/get-registry-items-with-code';
+import {
+  registry,
+  Registry,
+  RegistryItemType,
+  getRegistryItemsWithCode,
+} from '@saaj-ui/registry';
 
 const registryItemTypes: RegistryItemType[] = [
   'component',
