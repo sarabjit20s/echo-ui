@@ -234,14 +234,16 @@ importers:
         version: 2.20.0(@react-native/normalize-colors@0.76.6)(react-native@0.76.6(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.12)(react@18.3.1))(react@18.3.1)
 
   packages/registry:
-    dependencies:
+    devDependencies:
       '@saaj-ui/react-native':
         specifier: workspace:*
         version: link:../react-native
-    devDependencies:
       '@types/node':
         specifier: 22.10.2
         version: 22.10.2
+      tsup:
+        specifier: ^8.3.5
+        version: 8.3.5(jiti@1.21.7)(postcss@8.5.1)(typescript@5.7.3)(yaml@2.7.0)
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
