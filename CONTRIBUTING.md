@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for your interest in contributing to ui.shadcn.com. We're happy to have you here.
+Thanks for your interest in contributing. We're happy to have you here.
 
 Please take a moment to review this document before submitting your first pull request. We also strongly recommend that you check for open issues and pull requests to see if someone else is working on something similar.
 
@@ -34,7 +34,8 @@ packages
 | `apps/www/app`            | The Next.js application for the website. |
 | `apps/www/components`     | The React components for the website.    |
 | `apps/www/content`        | The content for the website.             |
-| `packages/react-native`   | The React Native components             |
+| `packages/react-native`   | The React Native components              |
+| `packages/registry`       | The registry of components               |
 
 
 ## Documentation
@@ -42,7 +43,7 @@ packages
 The documentation for this project is located in the `www` workspace. You can run the documentation locally by running the following command:
 
 ```bash
-pnpm --filter=www dev
+pnpm run dev --filter=www
 ```
 
 
